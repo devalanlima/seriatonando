@@ -4,7 +4,8 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   modules: [
     '@nuxtjs/tailwindcss',
-    '@formkit/auto-animate/nuxt'
+    '@formkit/auto-animate/nuxt',
+    '@nuxtjs/google-fonts',
   ],
   postcss: {
     plugins: {
@@ -12,4 +13,9 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  googleFonts:{
+    families:{
+      'Work+Sans': true,
+    }
+  }
 })
