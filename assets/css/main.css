@@ -13,4 +13,8 @@
         --color-danger: 227 57 57;
         --color-neutral: 57 196 227;
     }
+
+    body {
+        font-family: 'Work Sans', sans-serif;
+    }
 }
