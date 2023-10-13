@@ -15,7 +15,7 @@
       type="search"
       :placeholder="props.placeholder"
       v-model="outputValue"
-      class="absolute z-0 outline-none border-b-[1px] focus:border-b-2 box-decoration-slice bg-gradient-to-r from-[rgb(var(--color-primary)_/_.5)] focus:from-color_primary to-transparent border-color_primary bg-transparent text-color_light p-4 pb-3 placeholder:text-[rgb(var(--color-light)_/_.8)] pl-9 w-full "
+      class="absolute z-0 outline-none border-b-[1px] focus:border-b-2 box-decoration-slice bg-gradient-to-r from-color_primary/50 focus:from-color_primary to-transparent border-color_primary bg-transparent text-color_light p-4 pb-3 placeholder:text-color_light/80 pl-9 w-full "
     >
   </label>
 </template>
