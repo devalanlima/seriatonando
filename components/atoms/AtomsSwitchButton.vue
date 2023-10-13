@@ -1,5 +1,5 @@
 <template>
-  <label>
+  <label class="w-fit h-fit">
     <span class="sr-only">Switch Button</span>
     <input
       type="checkbox"
