@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-xl min-h-[25px] grid place-items-center relative px-[10px]">
-    <div class="relative h-[2px] bg-color_primary rounded-full w-full">
+    <div class="relative h-[2px] bg-color_primary/50 rounded-full w-full">
       <input
         type="range"
         :min="min"
@@ -78,7 +78,7 @@ onMounted(()=>{
 }
 
 .slider::-webkit-slider-thumb:hover {
-  @apply scale-110 outline outline-8 outline-[rgb(var(--color-primary)_/_.2)];
+  @apply scale-110 outline outline-8 outline-color_primary/25;
 }
 
 .slider::-moz-range-thumb {
@@ -86,6 +86,6 @@ onMounted(()=>{
 }
 
 .slider::-moz-range-thumb:hover {
-  @apply scale-110 outline outline-8 outline-[rgb(var(--color-primary)_/_.2)];
+  @apply  scale-110 outline outline-8 outline-color_primary/25;
 }
 </style>
