@@ -28,26 +28,33 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const min = computed(() => props.minValue)
+const min = ref(0)
+const max = ref(0)
 
-const max = computed(() => props.maxValue)
+const minValue = ref<number>(0);
+const maxValue = ref<number>(0);
 
-const minValue = ref<number>(min.value);
-const maxValue = ref<number>(max.value);
-
-const emit = defineEmits(['output'])
-
-const output = () => emit('output', {
-  min: minValue.value,
-  max: maxValue.value
+onMounted(()=>{
+  minValue.value = min.value = props.minValue
+  maxValue.value = max.value = props.maxValue
 })
+
+const emit = defineEmits<{
+  'update:minValue': [value: number],
+  'update:maxValue': [value: number],
+}>()
+
+const sendEmit = ()=>{
+  emit('update:maxValue', maxValue.value)
+  emit('update:minValue', minValue.value)
+}
 
 function updateMin() {
   if (minValue.value >= maxValue.value) {
     maxValue.value = Number(Math.max(minValue.value, maxValue.value));
     minValue.value = Number(Math.min(minValue.value, maxValue.value));
   }
-  output()
+  sendEmit()
 }
 
 function updateMax() {
@@ -55,12 +62,9 @@ function updateMax() {
     minValue.value = Number(Math.min(minValue.value, maxValue.value));
     maxValue.value = Number(Math.max(minValue.value, maxValue.value));
   }
-  output()
+  sendEmit()
 }
 
-onMounted(()=>{
-  output()
-})
 </script>
 
 <style scoped>
