@@ -1,7 +1,7 @@
 <template>
   <label class="text-color_primary flex flex-col relative justify-center max-w-[500px] cursor-text">
     <slot name="Label">
-      <p class="-top-[28px] font-semibold absolute">{{ props.label }}</p>
+      <p class="-top-[35px] font-semibold absolute" v-if="props.label">{{ props.label }}</p>
     </slot>
     <div class="stroke-white fill-white z-10 px-2 w-fit cursor-pointer hover:scale-110">
       <slot name="icon">
@@ -14,8 +14,8 @@
     <input
       type="search"
       :placeholder="props.placeholder"
-      v-model="outputValue"
-      class="absolute z-0 outline-none border-b-[1px] focus:border-b-2 box-decoration-slice bg-gradient-to-r from-color_primary/50 focus:from-color_primary to-transparent border-color_primary bg-transparent text-color_light p-4 pb-3 placeholder:text-color_light/80 pl-9 w-full "
+      v-model="value"
+      class="absolute z-0 outline-none border-b-[1px] focus:border-b-2 box-decoration-slice bg-gradient-to-r from-color_primary/50 focus:from-color_primary to-transparent border-color_primary bg-transparent text-white p-4 pb-3 placeholder:text-white/80 pl-9 w-full "
     >
   </label>
 </template>
@@ -23,17 +23,24 @@
 <script setup lang="ts">
 interface Props {
   label?: string;
-  placeholder: string;
+  placeholder?: string;
+  value: string;
 }
 
-const props = defineProps<Props>()
-
-const outputValue = UseDebouncedRef('')
-
-const emit = defineEmits(['output'])
-
-watch(()=>outputValue.value,()=>{
-  emit('output', outputValue.value)
+const props = withDefaults(defineProps<Props>(),{
+  value: '',
+  placeholder: 'Placeholder',
 })
+
+const value = UseDebouncedRef(props.value)
+
+const emit = defineEmits<{
+  'update:value': [value: string],
+}>()
+
+watch(()=>value.value,()=>{
+  emit('update:value', value.value)
+})
+
 
 </script>
