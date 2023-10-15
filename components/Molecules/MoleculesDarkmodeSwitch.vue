@@ -29,11 +29,6 @@ watch(()=>atualTheme.value, (newValue)=>{
     themeCookie.value = 'light'
   }
 })
-
-onMounted(()=>{
-  console.log(atualTheme.value);
-  
-})
 </script>
 
 <style scoped></style>
