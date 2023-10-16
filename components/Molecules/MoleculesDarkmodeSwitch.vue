@@ -2,32 +2,47 @@
   <div class="flex gap-2">
     <AtomsIconsSun
       :size="20"
-      :color="colorMode.value === 'light'? 'fill-color_primary': 'fill-color_light'"
+      :color="$colorMode.preference === 'light' ? 'fill-color_primary' : 'fill-color_light'"
     />
     <AtomsSwitchButton
       v-model:value="atualTheme"
+      v-if="!$colorMode.unknown"
+      :key="renderKey"
     />
     <AtomsIconsMoon
       :size="20"
-      :color="colorMode.value === 'dark'? 'fill-color_primary': 'fill-color_light'"
+      :color="$colorMode.preference === 'dark' ? 'fill-color_primary' : 'fill-color_light'"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 const colorMode = useColorMode()
-const themeCookie = useCookie("theme")
 
-const atualTheme = ref<boolean>(colorMode.value === 'dark'? true: false)
+const atualTheme = ref(true)
 
-watch(()=>atualTheme.value, (newValue)=>{
-  if (newValue) {
-    colorMode.value = 'dark'
-    themeCookie.value = 'dark'
+const renderKey = ref(0)
+const checkTheme = ()=>{
+  if (colorMode.preference === 'dark') {
+    atualTheme.value = true
   } else {
-    colorMode.value = 'light'
-    themeCookie.value = 'light'
+    atualTheme.value = false
   }
+  renderKey.value++
+}
+
+watch(() => colorMode.unknown, () => checkTheme())
+
+watch(() => atualTheme.value, (newValue) => {
+  if (newValue) {
+    colorMode.preference = 'dark'
+  } else {
+    colorMode.preference = 'light'
+  }
+})
+
+onMounted(() => {
+  checkTheme()
 })
 </script>
 
