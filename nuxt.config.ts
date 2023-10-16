@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@formkit/auto-animate/nuxt',
     '@nuxtjs/google-fonts',
-    '@nuxtjs/color-mode'
+    '@nuxtjs/color-mode',
+    '@vueuse/nuxt',
   ],
   postcss: {
     plugins: {
@@ -23,6 +24,6 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: '',
     preference: 'system', // default value of $colorMode.preference
-    fallback: 'dark', // fallback value if not system preference found
+    fallback: 'light', // fallback value if not system preference found
   },
 })
