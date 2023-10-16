@@ -1,8 +1,8 @@
 <template>
   <div class="flex gap-2">
     <AtomsIconsSun
-      :size="20"
-      :color="$colorMode.preference === 'light' ? 'fill-color_primary' : 'fill-color_light'"
+      width="w-5"
+      :fill-color="$colorMode.preference === 'light' ? 'fill-color_primary' : 'fill-color_light'"
     />
     <AtomsSwitchButton
       v-model:value="atualTheme"
@@ -10,8 +10,8 @@
       :key="renderKey"
     />
     <AtomsIconsMoon
-      :size="20"
-      :color="$colorMode.preference === 'dark' ? 'fill-color_primary' : 'fill-color_light'"
+      width="w-5"
+      :fill-color="$colorMode.preference === 'dark' ? 'fill-color_primary' : 'fill-color_light'"
     />
   </div>
 </template>
