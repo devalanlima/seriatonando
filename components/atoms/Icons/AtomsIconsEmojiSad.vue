@@ -1,7 +1,8 @@
 <template>
-  <div class='fill-neutral-500'>
+  <div :class="[props.fillColor, props.strokeColor, props.strokeWidth, props.width, props.height, props.aspect]">
     <svg
-      :width="props.size"
+      width="100%"
+      height="100%"
       viewBox="0 0 18 18"
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -14,10 +15,18 @@
 
 <script setup lang="ts">
 interface Props {
-  size?: number;
+  fillColor?: string;
+  strokeColor?: string;
+  strokeWidth?: string;
+  width?: string;
+  height?: string;
+  aspect?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  size: 100,
+  fillColor: 'fill-neutral-500',
+  strokeColor: 'stroke-red-300',
+  aspect: 'aspect-square',
+  strokeWidth: 'stroke-0'
 })
 </script>
