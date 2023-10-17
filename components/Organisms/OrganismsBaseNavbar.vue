@@ -1,14 +1,23 @@
 <template>
   <nav>
     <ul class="flex justify-between gap-10 items-center p-5">
-      <li>
+      <li class="min-w-[200px]">
         <NuxtLink to="/">
-          <AtomsIconsSeriatonando aspect="" fill-color="fill-color_primary" />
+          <AtomsIconsSeriatonando
+            aspect=""
+            fill-color="fill-color_primary"
+          />
         </NuxtLink>
       </li>
+
       <li class="mx-auto ml-0 w-full max-w-[650px]">
         <MoleculesNavRoutes />
       </li>
+
+      <li class="w-full max-w-[500px] mx-auto mr-0 min-w-[160px]">
+        <AtomsSearchbar />
+      </li>
+
       <li
         class="relative"
         v-auto-animate
@@ -23,6 +32,7 @@
           class="absolute top-14 right-0"
         />
       </li>
+
     </ul>
   </nav>
 </template>
