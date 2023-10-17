@@ -1,5 +1,5 @@
 <template>
-  <button class="w-12 h-12 rounded-full overflow-hidden" @click="action">
+  <button class="w-12 h-12 rounded-lg overflow-hidden" @click="action">
     <img src="https://placehold.co/600x600" alt="Profile Picture">
   </button>
 </template>
