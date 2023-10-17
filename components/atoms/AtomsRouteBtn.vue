@@ -6,7 +6,7 @@
     ]"
       :is="props.icon"
     />
-    <p :class="['text-lg font-semibold relative',
+    <p :class="['text-lg font-semibold relative whitespace-nowrap',
     props.isSelected? 'text-route-selected': 'text-route'
   ]"><slot/>
     </p>
