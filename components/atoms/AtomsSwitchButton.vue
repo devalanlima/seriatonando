@@ -16,16 +16,22 @@
 
 <script setup lang="ts">
 interface Props {
-  value?: boolean;
+  modelValue: boolean
 }
-const props = withDefaults(defineProps<Props>(), {
-  value: false,
-})
-const isChecked = ref<boolean>(props.value)
+
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
-  'update:value': [value: boolean];
+  'update:modelValue': [value: boolean]
 }>()
 
-watch(()=>isChecked.value, (newValue)=>emit('update:value', newValue))
+const isChecked = computed({
+  get() {
+    return props.modelValue
+  },
+  set(isChecked) {
+    emit('update:modelValue', isChecked)
+  }
+})
+
 </script>
