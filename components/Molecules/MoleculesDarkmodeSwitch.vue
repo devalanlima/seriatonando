@@ -4,11 +4,7 @@
       width="w-5"
       :fill-color="$colorMode.preference === 'light' ? 'fill-color_primary' : 'fill-color_light'"
     />
-    <AtomsSwitchButton
-      v-model:value="atualTheme"
-      v-if="!$colorMode.unknown"
-      :key="renderKey"
-    />
+    <AtomsSwitchButton v-model="atualTheme" />
     <AtomsIconsMoon
       width="w-5"
       :fill-color="$colorMode.preference === 'dark' ? 'fill-color_primary' : 'fill-color_light'"
@@ -21,28 +17,12 @@ const colorMode = useColorMode()
 
 const atualTheme = ref(true)
 
-const renderKey = ref(0)
-const checkTheme = ()=>{
-  if (colorMode.preference === 'dark') {
-    atualTheme.value = true
-  } else {
-    atualTheme.value = false
-  }
-  renderKey.value++
-}
-
-watch(() => colorMode.unknown, () => checkTheme())
-
 watch(() => atualTheme.value, (newValue) => {
-  if (newValue) {
-    colorMode.preference = 'dark'
-  } else {
-    colorMode.preference = 'light'
-  }
+  newValue ? colorMode.preference = 'dark' : colorMode.preference = 'light'
 })
 
 onMounted(() => {
-  checkTheme()
+  colorMode.preference === 'dark' ? atualTheme.value = true : atualTheme.value = false
 })
 </script>
 
