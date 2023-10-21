@@ -1,17 +1,18 @@
 <template>
   <div
-    class="flex rounded-xl outline-2 outline outline-transparent hover:outline-color_primary relative w-full h-[210px] max-w-[600px] transition-color duration-300"
+    class="flex rounded-xl outline-2 outline outline-transparent hover:outline-color_primary relative w-full h-[210px] max-w-[768px] transition-color duration-300"
   >
     <AtomsCheckbox
       class="absolute top-2 left-[110px] z-10"
       v-model="watchedMovie"
       :title="watchedMovie ? `Mark ${movieName} as unseen` : `Mark ${movieName} as seen`"
     />
-    <img
-      class="rounded-s-lg h-full aspect-auto select-none"
-      :src="imagePoster"
-      alt="poster"
-    >
+    <a href="#" class="min-w-[140px] block rounded-s-xl overflow-hidden">
+      <img
+        :src="imagePoster"
+        alt="poster"
+      >
+    </a>
     <AtomsWatchlistBtn
       class="absolute z-10 -top-1 right-5"
       v-model="watchlistMovie"
