@@ -4,7 +4,7 @@
       <a
         title="A fantástica fábrica de chocolate"
         href="#"
-        class="relative text-xl whitespace-nowrap text-ellipsis overflow-hidden leading-none cursor-pointer w-fit max-w-[194px] after:content-[''] after:block after:w-0 hover:after:w-full after:h-[2px] after:bg-color_light after:absolute after:bottom-0 pb-[2px] after:rounded-full after:transition-all after:duration-300 after:ease-in-out after:-translate-x-1/2 hover:after:translate-x-0"
+        class="relative text-xl whitespace-nowrap text-ellipsis overflow-hidden leading-none cursor-pointer w-fit max-w-[194px] hover:text-color_primary transition-colors duration-150 ease-in-out"
       >Lorem ipsum dolor sit</a>
       <p
         class="whitespace-nowrap text-ellipsis overflow-hidden text-color_secondary text-opacity-80 text-sm relative before:absolute before:content-[''] before:bg-gradient-to-r before:-right-3 before:from-transparent before:to-80% before:to-color_terciary before:block before:w-[80px] before:h-5 before:pointer-events-none">
