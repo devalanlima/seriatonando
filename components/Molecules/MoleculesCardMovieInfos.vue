@@ -1,6 +1,6 @@
 <template>
   <AtomsBaseCard class="flex relative overflow-hidden h-full flex-col justify-between gap-3">
-    <div class="flex flex-col justify-between h-full">
+    <div class="flex flex-col justify-start gap-1 h-fit">
       <a
         title="A fantástica fábrica de chocolate"
         href="#"
@@ -11,9 +11,7 @@
         Lorem / Ipsum / Dolor / Sit / Amet</p>
       <p
         class="truncate-text text-sm pr-0  before:content-[''] before:bg-gradient-to-r before:from-transparent before:to-90% before:to-color_terciary before:block before:w-[100px] before:h-5 before:pointer-events-none">
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Numquam provident, nobis culpa corporis veritatis
-        explicabo nam dolore id, nesciunt placeat similique eaque temporibus rem? Sapiente repellendus impedit fuga nulla
-        itaque!
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque magnam, natus dolor mollitia impedit consequuntur deserunt quaerat aspernatur ducimus voluptates. Sunt tempora labore quidem aspernatur. Quis excepturi odit eos quod?
       </p>
     </div>
     <div class="flex justify-start">
