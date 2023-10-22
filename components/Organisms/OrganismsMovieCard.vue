@@ -18,7 +18,7 @@
       v-model="watchlistMovie"
       :title="watchlistMovie ? `Remove ${movieName} from watchlist` : `Add ${movieName} to watchlist`"
     />
-    <MoleculesCardMovieInfos class="rounded-s-none" />
+    <MoleculesCardMovieInfos class="rounded-s-none w-full" />
   </div>
 </template>
 
