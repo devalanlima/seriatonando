@@ -1,46 +1,49 @@
 <template>
-  <label class="text-color_primary h-12 mb-[6px] flex flex-col relative justify-center cursor-text">
-    <slot name="Label">
-      <p class="-top-[35px] font-semibold absolute" v-if="props.label">{{ props.label }}</p>
-    </slot>
-    <div class="stroke-white fill-white z-10 px-2 pl-3 w-fit cursor-pointer hover:scale-110">
-      <slot name="icon">
-        <AtomsIconsMagnifying
-          width="w-5"
-          stroke-color="stroke-white"
-          stroke-width="stroke-1"
-        />
-      </slot>
+  <label class="flex flex-col gap-1 w-full">
+    <p>{{ props.label }}</p>
+    <div class="relative flex items-center">
+      <component
+        class="absolute left-2 cursor-pointer"
+        :is="props.icon"
+        width="w-5"
+        stroke-color="stroke-color_primary"
+        stroke-width="stroke-1"
+      />
+      <input
+        v-model="inputValue"
+        type="text"
+        :placeholder="props.placeholder"
+        class="w-full p-2 bg-transparent outline outline-1 outline-color_primary rounded-lg focus:outline-2 focus:bg-color_primary/10 pl-9 placeholder:text-color_secondary/70 dark:text-color_light text-color_terciary"
+      >
     </div>
-    <input
-      type="search"
-      :placeholder="props.placeholder"
-      v-model="value"
-      class="absolute z-0 outline-none border-b-[1px] focus:border-b-2 box-decoration-slice bg-gradient-to-r from-color_primary/50 focus:from-color_primary to-transparent border-color_primary bg-transparent text-white p-4 pb-3 placeholder:text-white/80 pl-10 w-full"
-    >
   </label>
 </template>
 
 <script setup lang="ts">
+import AtomsIconsMagnifying from './Icons/AtomsIconsMagnifying.vue';
+
 interface Props {
   label?: string;
   placeholder?: string;
-  value: string;
+  modelValue?: string;
+  icon?: typeof AtomsIconsMagnifying;
 }
 
-const props = withDefaults(defineProps<Props>(),{
-  value: '',
+const props = withDefaults(defineProps<Props>(), {
+  icon: AtomsIconsMagnifying,
+  modelValue: '',
 })
-
-const value = UseDebouncedRef(props.value)
 
 const emit = defineEmits<{
-  'update:value': [value: string],
+  'update:modelValue': [value: string]
 }>()
 
-watch(()=>value.value,()=>{
-  emit('update:value', value.value)
+const inputValue = computed({
+  get() {
+    return props.modelValue
+  },
+  set(inputValue) {
+    emit('update:modelValue', inputValue)
+  },
 })
-
-
 </script>
