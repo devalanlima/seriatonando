@@ -1,7 +1,7 @@
 <template>
-  <nav>
-    <ul class="flex justify-between gap-10 items-center p-5">
-      <li class="min-w-[200px]">
+  <nav id="organismBaseNavBar">
+    <ul class="flex justify-between flex-wrap xl:flex-nowrap gap-5 md:gap-x-7 lg:gap-x-10 items-center">
+      <li class="md:order-1 md:w-full grow w-[200px] md:min-w-[150px] max-w-[300px] md:basis-0">
         <NuxtLink to="/">
           <AtomsIconsSeriatonando
             aspect=""
@@ -10,16 +10,8 @@
         </NuxtLink>
       </li>
 
-      <li class="mx-auto ml-0 w-full max-w-[650px]">
-        <MoleculesNavRoutes />
-      </li>
-
-      <li class="w-full max-w-[500px] mx-auto mr-0 min-w-[160px]">
-        <AtomsSearchbar />
-      </li>
-
       <li
-        class="relative"
+        class="relative h-12 md:order-3 lg:order-4"
         v-auto-animate
       >
         <AtomsAvatarBtn
@@ -29,8 +21,19 @@
         <LazyOrganismsMenuCard
           ref="menuCard"
           v-if="isMenuOpen"
-          class="absolute top-14 right-0"
+          class="absolute top-14 right-0 md:-right-48 lg:right-0"
         />
+      </li>
+
+      <li class="w-full md:order-4 md:max-w-[360px] md:mx-auto md:ml-0 md:basis-1/2 xl:basis-1/2 lg:order-3 xl:mr-0">
+        <AtomsSearchbar
+          v-model="searchbarValue"
+          placeholder="Search..."
+        />
+      </li>
+
+      <li class="w-full xl:max-w-[560px] md:order-2 md:basis-3/4 md:mx-auto xl:basis-2/3 xl:ml-0">
+        <MoleculesNavRoutes />
       </li>
 
     </ul>
@@ -40,6 +43,7 @@
 <script setup lang="ts">
 const menuCard = ref(null)
 const isMenuOpen = ref<boolean>(false)
+const searchbarValue = ref<string>()
 
 let debounced = false;
 const toggleMenu = () => {
@@ -48,7 +52,7 @@ const toggleMenu = () => {
     isMenuOpen.value ? isMenuOpen.value = false : isMenuOpen.value = true;
     setTimeout(function () {
       debounced = false;
-    }, 100);
+    }, 0);
   }
 }
 
