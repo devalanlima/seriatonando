@@ -1,12 +1,12 @@
 <template>
-  <div class="testando flex items-center gap-1 relative group">
+  <div class="testando flex flex-col md:flex-row items-center gap-1 relative group">
     <component
       :class="['component-route fill-color_secondary w-6',
     props.isSelected? 'component-route-selected': 'component-route'
     ]"
       :is="props.icon"
     />
-    <p :class="['text-lg font-semibold relative whitespace-nowrap',
+    <p :class="['text-xs md:text-lg font-semibold relative whitespace-nowrap',
     props.isSelected? 'text-route-selected': 'text-route'
   ]"><slot/>
     </p>
