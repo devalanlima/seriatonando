@@ -1,13 +1,13 @@
 <template>
   <div
-    class="flex rounded-xl outline-2 outline outline-transparent hover:outline-color_primary relative w-full h-[210px] max-w-[768px] transition-color duration-300"
+    class="flex md:rounded-xl outline-2 outline outline-transparent hover:outline-color_primary relative w-full h-[210px] max-w-[768px] transition-color duration-300"
   >
     <AtomsCheckbox
       class="absolute top-2 left-[110px] z-10"
       v-model="watchedMovie"
       :title="watchedMovie ? `Mark ${movieName} as unseen` : `Mark ${movieName} as seen`"
     />
-    <a href="#" class="min-w-[140px] block rounded-s-xl overflow-hidden">
+    <a href="#" class="min-w-[140px] block md:rounded-s-xl overflow-hidden">
       <img
         :src="imagePoster"
         alt="poster"
@@ -18,7 +18,7 @@
       v-model="watchlistMovie"
       :title="watchlistMovie ? `Remove ${movieName} from watchlist` : `Add ${movieName} to watchlist`"
     />
-    <MoleculesCardMovieInfos class="rounded-s-none w-full" />
+    <MoleculesCardMovieInfos class="rounded-e-none md:rounded-e-xl rounded-s-none w-full" />
   </div>
 </template>
 
