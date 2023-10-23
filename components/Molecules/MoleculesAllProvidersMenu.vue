@@ -14,7 +14,7 @@
         class="absolute right-5 top-5"
         @action="menuProvidersIsOpen = false"
       />
-      <p class="text-2xl font-bold pt-2 leading-none max-w-[90%]">CHOOSE YOUR STREAMIGS SERVICES</p>
+      <p class="text-2xl font-bold pt-2 leading-none max-w-[90%]">CHOOSE YOUR STREAMING SERVICES</p>
       <div class="w-full h-[2px] block bg-color_primary mx-auto"></div>
       <ul class="grid grid-cols-[repeat(auto-fit,_minmax(50px,_1fr))] p-1 place-items-center gap-7 overflow-y-auto">
         <li :class="['hover:bg-color_primary rounded-lg grid place-items-center',
