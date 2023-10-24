@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-xl min-h-[25px] grid place-items-center relative px-[10px]">
+  <div class="max-w-xl min-h-[25px] grid place-items-center relative px-[10px] w-full">
     <div class="relative h-[2px] bg-color_primary/50 rounded-full w-full">
       <input
         type="range"
@@ -7,7 +7,7 @@
         :max="max"
         @input="updateMin"
         v-model="minValue"
-        class="slider h-2 w-full cursor-pointer absolute right-[10px]"
+        class="slider w-full cursor-pointer absolute right-[10px]"
       >
       <input
         type="range"
@@ -15,7 +15,7 @@
         :max="max"
         @input="updateMax"
         v-model="maxValue"
-        class="slider h-2 w-full cursor-pointer absolute left-[10px]"
+        class="slider w-full cursor-pointer absolute left-[10px]"
       >
     </div>
   </div>
@@ -28,16 +28,11 @@ interface Props {
 }
 const props = defineProps<Props>()
 
-const min = ref(0)
-const max = ref(0)
+const min = ref(props.minValue)
+const max = ref(props.maxValue)
 
-const minValue = ref<number>(0);
-const maxValue = ref<number>(0);
-
-onMounted(()=>{
-  minValue.value = min.value = props.minValue
-  maxValue.value = max.value = props.maxValue
-})
+const minValue = ref<number>(props.minValue);
+const maxValue = ref<number>(props.maxValue);
 
 const emit = defineEmits<{
   'update:minValue': [value: number],
@@ -71,7 +66,7 @@ function updateMax() {
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  @apply h-0 bg-transparent pointer-events-none border-0;
+  @apply h-[2px] bg-transparent pointer-events-none border-0;
 }
 
 
