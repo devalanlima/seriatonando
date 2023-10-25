@@ -1,6 +1,8 @@
 <template>
   <div class="max-w-xl min-h-[25px] grid place-items-center relative px-[10px] w-full">
-    <div class="relative h-[2px] bg-color_primary/50 rounded-full w-full">
+    <div :class="['relative h-[2px] rounded-full w-full',
+      props.hasBg ? 'bg-color_primary/50' : ''
+    ]">
       <input
         type="range"
         :min="min"
@@ -23,13 +25,18 @@
 
 <script setup lang="ts">
 interface Props {
+  startMinValue: number;
+  startMaxValue: number;
   minValue: number;
   maxValue: number;
+  hasBg?: boolean;
 }
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  hasBg: true,
+})
 
-const min = ref(props.minValue)
-const max = ref(props.maxValue)
+const min = ref(props.startMinValue)
+const max = ref(props.startMaxValue)
 
 const minValue = ref<number>(props.minValue);
 const maxValue = ref<number>(props.maxValue);
@@ -39,7 +46,7 @@ const emit = defineEmits<{
   'update:maxValue': [value: number],
 }>()
 
-const sendEmit = ()=>{
+const sendEmit = () => {
   emit('update:maxValue', maxValue.value)
   emit('update:minValue', minValue.value)
 }
@@ -85,6 +92,6 @@ function updateMax() {
 }
 
 .slider::-moz-range-thumb:hover {
-  @apply  scale-110 outline outline-8 outline-color_primary/25;
+  @apply scale-110 outline outline-8 outline-color_primary/25;
 }
 </style>
