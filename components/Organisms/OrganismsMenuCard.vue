@@ -1,5 +1,5 @@
 <template>
-  <AtomsBaseCard class="flex w-fit flex-col gap-2 z-50 shadow-xl shadow-black/30 border-[1px] border-black border-opacity-25">
+  <AtomsBaseCard   color="bg-color_highlight" class="flex w-fit flex-col gap-2 z-50 shadow-xl shadow-black/30 border-[1px] border-black border-opacity-25">
     <MoleculesProfileUserInfos
       :name="userInfos.name"
       :email="userInfos.email"
