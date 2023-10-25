@@ -1,47 +1,46 @@
 <template>
-  <div class="w-full">
-    <ul
-      class="flex overflow-x-auto overflow-y-hidden items-center gap-3 pr-2 max-w-full py-1"
-      ref="el"
-      @wheel="providersHorizontalScroll"
+  <ul
+    class="flex overflow-x-auto overflow-y-hidden items-center gap-3 pr-2 max-w-full py-1"
+    ref="el"
+    @wheel="providersHorizontalScroll"
+    v-auto-animate
+  >
+    <li class="h-[55px]">
+      <AtomsButtonIcon
+        :icon="AtomsIconsPlusBg"
+        @action="menuProvidersIsOpen = !menuProvidersIsOpen"
+        title="Open providers select menu"
+      />
+    </li>
+    <template
+      v-for="provider in allProviders"
+      :key="provider.provider_id"
     >
-      <li class="h-[55px]">
-        <AtomsButtonIcon
-          :icon="AtomsIconsPlusBg"
-          @action="menuProvidersIsOpen = !menuProvidersIsOpen"
-          title="Open providers select menu"
-        />
-      </li>
-      <template
-        v-for="provider in allProviders"
-        :key="provider.provider_id"
+      <li
+        v-if="selectedProviders.includes(provider.provider_id)"
+        class="h-fit"
       >
-        <li
-          v-if="selectedProviders.includes(provider.provider_id)"
-          class="h-fit"
+        <AtomsStreamingLabel
+          :alt-image="provider.provider_name + 'logo'"
+          :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
+          :title="provider.provider_name"
+          :is-checked="selectedProviders.includes(provider.provider_id)"
         >
-          <AtomsStreamingLabel
-            :alt-image="provider.provider_name + 'logo'"
-            :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
-            :title="provider.provider_name"
-            :is-checked="selectedProviders.includes(provider.provider_id)"
+          <input
+            class="sr-only"
+            type="checkbox"
+            v-model="selectedProviders"
+            :value="provider.provider_id"
           >
-            <input
-              class="sr-only"
-              type="checkbox"
-              v-model="selectedProviders"
-              :value="provider.provider_id"
-            >
-          </AtomsStreamingLabel>
-        </li>
-      </template>
-    </ul>
-    <LazyMoleculesAllProvidersMenu
-      v-model:is-open="menuProvidersIsOpen"
-      :providers="allProviders"
-      v-model="selectedProviders"
-    />
-  </div>
+        </AtomsStreamingLabel>
+      </li>
+    </template>
+  </ul>
+  <LazyMoleculesAllProvidersMenu
+    v-model:is-open="menuProvidersIsOpen"
+    :providers="allProviders"
+    v-model="selectedProviders"
+  />
 </template>
 
 <script setup lang="ts">
