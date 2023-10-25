@@ -13,6 +13,7 @@ module.exports = {
                 color_primary: 'rgb(var(--color-primary) / <alpha-value>)',
                 color_secondary: 'rgb(var(--color-secondary) / <alpha-value>)',
                 color_terciary: 'rgb(var(--color-terciary) / <alpha-value>)',
+                color_highlight: 'rgb(var(--color-highlight) / <alpha-value>)',
                 color_dark: 'rgb(var(--color-dark) / <alpha-value>)',
                 color_light: 'rgb(var(--color-light) / <alpha-value>)',
                 color_success: 'rgb(var(--color-success) / <alpha-value>)',

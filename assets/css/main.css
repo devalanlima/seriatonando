@@ -7,27 +7,63 @@
         --color-primary: 231 18 112;
         --color-secondary: 131 131 131;
         --color-terciary: 49 0 35;
+        --color-highlight: 85 4 50;
         --color-dark: 242 225 255;
         --color-light: 242 225 255;
         --color-neutral: 57 196 227;
         --color-danger: 227 57 57;
-        --color-success: 152 227 57;
+        --color-success: 41 195 71;
     }
 
     .dark{
         --color-primary: 231 18 112;
         --color-secondary: 131 131 131;
         --color-terciary: 11 15 46;
+        --color-highlight: 20 27 83;
         --color-dark: 6 2 20;
         --color-light: 242 225 255;
         --color-neutral: 57 196 227;
         --color-danger: 227 57 57;
-        --color-success: 152 227 57;
+        --color-success: 41 195 71;
     }
 
 
     body {
         font-family: 'Work Sans', sans-serif;
-        @apply text-color_light;
+        @apply text-color_light bg-color_dark leading-5;
+    }
+
+    html{
+        scrollbar-width: thin;
+        scrollbar-color: rgb(231, 18, 112) rgb(6, 2, 20);
+    }
+
+    ::-webkit-scrollbar {
+        @apply w-1 h-1;
+    }
+
+    /* Cor de fundo da barra de rolagem */
+    ::-webkit-scrollbar-track {
+    @apply bg-color_terciary outline outline-1 outline-color_terciary ;
+    }
+
+    /* Cor do thumb (a alça da barra de rolagem) */
+    ::-webkit-scrollbar-thumb {
+    @apply bg-color_primary rounded-full;
+    }
+
+    /* Cor do thumb quando passar o mouse por cima */
+    ::-webkit-scrollbar-thumb:hover {
+    @apply bg-color_primary/70 bg-opacity-70;
+    }
+
+    ::selection {
+    @apply bg-color_primary/50 text-color_light;
+    }
+}
+
+@layer utilities {
+    .truncate-text {
+        @apply max-h-[calc(1.25rem_*_4)] relative overflow-hidden pr-4 text-justify before:absolute before:bottom-0 before:right-0 before:content-['...'] ;
     }
 }
