@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-fit flex flex-col relative"
+    class="w-fit flex flex-col"
     v-auto-animate
   >
     <AtomsFilterBtn
@@ -10,7 +10,7 @@
     <LazyAtomsBaseCard
       color="bg-color_highlight"
       v-if="isFilterOpen"
-      class="absolute w-[300px] flex flex-col top-14 left-0 z-20 overflow-hidden shadow-md shadow-black/50"
+      :class="['absolute flex flex-col top-14 z-20 overflow-hidden shadow-md shadow-black/50', props.widthCard? props.widthCard: 'w-[300px] left-0']"
       ref="target"
     >
       <slot/>
@@ -25,6 +25,7 @@ const target = ref(null)
 
 interface Props {
   btnTitle: string;
+  widthCard?: string;
 }
 
 const props = defineProps<Props>()
