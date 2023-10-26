@@ -4,7 +4,7 @@
   >
     <AtomsBaseCard
       color="bg-color_highlight"
-      class="w-fit overflow-hidden flex gap-3"
+      class="w-fit overflow-hidden flex gap-3 whitespace-nowrap"
     >
       {{ props.title }}
       <AtomsIconsArrow
