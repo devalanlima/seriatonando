@@ -2,7 +2,7 @@
   <nav id="organismBaseNavBar">
     <ul class="flex justify-between flex-wrap xl:flex-nowrap gap-5 md:gap-x-7 lg:gap-x-10 items-center">
       <li class="md:order-1 md:w-full grow w-[200px] md:min-w-[150px] max-w-[300px] md:basis-0">
-        <NuxtLink to="/">
+        <NuxtLink :to="localPath('/')">
           <AtomsIconsSeriatonando
             aspect=""
             fill-color="fill-color_primary"
@@ -64,6 +64,7 @@ onClickOutside(menuCard, () => {
   toggleMenu()
 })
 
+const localPath = useLocalePath()
 </script>
 
 <style scoped></style>
