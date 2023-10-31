@@ -1,17 +1,17 @@
 <template>
   <label
-    class="flex h-full items-center w-full"
+    class="flex h-fit items-center w-full relative rounded-lg overflow-hidden"
   >
     <AtomsIconsMagnifying
-      class="cursor-pointer absolute"
-      width="w-[13px]"
+      class="cursor-pointer absolute left-2"
+      width="w-[18px]"
       stroke-color="stroke-color_primary"
-      stroke-width="stroke-1"
+      stroke-width="stroke-2"
     />
     <input
       type="text"
       v-model="searchbarValue"
-      class="bg-transparent focus:outline-none pl-5 w-full"
+      class="pl-8 p-2 w-full focus:outline-none bg-transparent focus:bg-color_primary/10 "
     >
   </label>
 </template>
