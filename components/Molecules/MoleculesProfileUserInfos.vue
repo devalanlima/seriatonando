@@ -1,5 +1,5 @@
 <template>
-  <div class="flex gap-5 justify-between">
+  <div class="flex gap-5">
     <AtomsIconsAvatar
       fill-color="fill-color_primary"
       width="w-[50px]"
