@@ -22,7 +22,11 @@ watch(() => atualTheme.value, (newValue) => {
 })
 
 onMounted(() => {
-  colorMode.preference === 'dark' ? atualTheme.value = true : atualTheme.value = false
+  if (colorMode.preference === 'dark') {
+    atualTheme.value = true
+  } else if (colorMode.preference === 'light') {
+    atualTheme.value = false
+  }
 })
 </script>
 
