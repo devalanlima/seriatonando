@@ -1,7 +1,7 @@
 <template>
-  <nav>
+  <nav class="overflow-x-scroll overflow-y-hidden">
     <ul
-      class="flex overflow-x-auto overflow-y-hidden items-center gap-3 pr-2 max-w-full py-1"
+      class="flex items-center gap-3 pr-2 max-w-full py-2"
       ref="el"
       @wheel="providersHorizontalScroll"
       v-auto-animate
