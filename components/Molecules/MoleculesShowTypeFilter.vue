@@ -1,20 +1,25 @@
 <template>
-  <AtomsBaseCard color="bg-transparent" class="outline outline-2 outline-color_primary flex gap-5">
-    <AtomsShowTypeLabelFilter
-      v-for="showType in showTypes"
-      :key="showType"
-      :title="showType"
-      :is-checked="selectedShowType.includes(showType)"
-    >
-      <input
-        type="radio"
-        :value="showType"
-        v-model="selectedShowType"
-        name="showTypes"
-        class="sr-only"
+  <nav class="outline outline-2 outline-color_primary py-3 px-3 rounded-xl">
+    <ul class="flex items-center gap-5">
+      <li
+        v-for="showType in showTypes"
+        :key="showType"
       >
-    </AtomsShowTypeLabelFilter>
-  </AtomsBaseCard>
+        <AtomsShowTypeLabelFilter
+          :title="showType"
+          :is-checked="selectedShowType.includes(showType)"
+        >
+          <input
+            type="radio"
+            :value="showType"
+            v-model="selectedShowType"
+            name="showTypes"
+            class="sr-only"
+          >
+        </AtomsShowTypeLabelFilter>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script setup lang="ts">
