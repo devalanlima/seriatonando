@@ -1,32 +1,29 @@
 <template>
-  <ul class="flex flex-col pt-2 text-lg">
+  <ul>
     <li
-      class="py-2 px-0 pl-7 hover:bg-color_primary/50 bg- cursor-pointer box-border"
-      v-for="(item, index) in props.options"
-      :key="index"
-      @click="$emit('update:output', index)"
+      v-for="item in props.items"
+      :key="item.id"
+      @click="item.isOpen = true"
     >
-      {{ item }}
-    </li>
-    <li
-      v-if="$slots.lastOption"
-      class="mt-2 border-t-2 pt-4 border-color_primary/50"
-    >
-      <slot name="lastOption"></slot>
+      <slot :name="item.id">
+        <div class="hover:bg-color_primary/50 py-3 px-0 pl-7 box-border cursor-pointer">
+          {{ item.name }}
+        </div>
+      </slot>
     </li>
   </ul>
 </template>
 
 <script setup lang="ts">
+interface Item {
+  id: number;
+  name: string;
+  isOpen: boolean;
+}
 
 interface Props {
-  options: Array<string>
+  items: Array<Item>;
 }
 
 const props = defineProps<Props>()
-
-const emit = defineEmits<{
-  'update:output': [value: number]
-}>()
-
 </script>
