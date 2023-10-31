@@ -29,26 +29,28 @@ import AtomsIconsEyeGlasses from '../Atoms/Icons/AtomsIconsEyeGlasses.vue';
 
 const localPath = useLocalePath()
 
-const routes = {
-  home: {
-    name: 'HOME',
-    path: localPath('/'),
-    icon: AtomsIconsHouse,
+const routes = computed(() => {
+  return {
+    home: {
+      name: 'HOME',
+        path: localPath('/'),
+          icon: AtomsIconsHouse,
   },
-  trending: {
-    name: 'TRENDING',
-    path: localPath('/trending'),
-    icon: AtomsIconsFire,
+    trending: {
+      name: 'TRENDING',
+        path: localPath('/trending'),
+          icon: AtomsIconsFire,
   },
-  popular: {
-    name: 'UP COMING',
-    path: localPath('/upcoming'),
-    icon: AtomsIconsEyeGlasses,
+    popular: {
+      name: 'UP COMING',
+        path: localPath('/upcoming'),
+          icon: AtomsIconsEyeGlasses,
   },
-  watchlist: {
-    name: 'WATCHLIST',
-    path: localPath('/watchlist'),
-    icon: AtomsIconsFlag,
+    watchlist: {
+      name: 'WATCHLIST',
+        path: localPath('/watchlist'),
+          icon: AtomsIconsFlag,
   },
-}
+  }
+})
 </script>
