@@ -7,7 +7,7 @@
       <li class="w-[147px]">
         <label class="flex gap-2 items-center cursor-pointer w-fit">
           <AtomsCheckbox v-model="isAllChecked" />
-          <p :class="['select-none underline underline-offset-4', isAllChecked ? 'text-color_primary font-semibold' : 'text-color_light']">{{
+          <p :class="['select-none', isAllChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">{{
             isAllChecked ? 'Unselect All' : 'Select All' }}</p>
         </label>
       </li>
@@ -20,7 +20,7 @@
           <AtomsCheckbox
             v-model="genre.isChecked"
           />
-          <p :class="['select-none', genre.isChecked ? 'text-color_primary font-semibold' : 'text-color_light']">{{
+          <p :class="['select-none', genre.isChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">{{
             genre.name }}</p>
         </label>
       </li>
