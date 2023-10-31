@@ -6,7 +6,7 @@
     <AtomsBaseCard
       ref="target"
       :class="['fixed w-full h-full rounded-s-none rounded-e-none md:rounded-xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 shadow-2xl shadow-color_terciary flex flex-col gap-3',
-        height < 600? 'md:max-w-full md:max-h-full': 'md:max-w-[600px] md:max-h-[600px]'
+        height < 600 ? 'md:max-w-full md:max-h-full' : 'md:max-w-[600px] md:max-h-[600px]'
       ]"
     >
       <AtomsCloseButton
@@ -15,9 +15,13 @@
         @action="menuProvidersIsOpen = false"
       />
       <p class="text-2xl font-bold pt-2 leading-none max-w-[90%]">CHOOSE YOUR STREAMING SERVICES</p>
-      <div class="w-full h-[2px] block bg-color_primary mx-auto"></div>
-      <ul class="grid grid-cols-[repeat(auto-fit,_minmax(50px,_1fr))] p-1 place-items-center gap-7 overflow-y-auto">
-        <li :class="['hover:bg-color_primary rounded-lg grid place-items-center',
+      <div>
+        <AtomsDivisionLine />
+        <AtomsMiniSearchbar v-model="searchbarValue" class="rounded-e-none rounded-s-none"/>
+        <AtomsDivisionLine />
+      </div>
+      <ul class="grid grid-cols-[repeat(auto-fit,_minmax(50px,_55px))] p-1 place-items-center justify-center gap-7 overflow-y-auto">
+        <li v-if="searchbarValue.length === 0" :class="['hover:bg-color_primary rounded-lg grid place-items-center',
           isAllProvidersChecked ? 'bg-color_primary/80' : 'bg-color_primary/30'
         ]">
           <AtomsButtonIcon
@@ -28,24 +32,26 @@
             :title="isAllProvidersChecked ? 'Clear all selected streaming services' : 'Select all streaming services'"
           />
         </li>
-        <li
+        <template
           v-for="provider in props.providers"
           :key="provider.provider_id"
         >
-          <AtomsStreamingLabel
-            :alt-image="provider.provider_name + 'logo'"
-            :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
-            :title="provider.provider_name"
-            :is-checked="selectedProviders.includes(provider.provider_id)"
-          >
-            <input
-              class="sr-only"
-              type="checkbox"
-              v-model="selectedProviders"
-              :value="provider.provider_id"
+          <li v-if="searchbarValue.length === 0? true : provider.provider_name.toLowerCase().includes(searchbarValue.toLowerCase()) ? true : false" >
+            <AtomsStreamingLabel
+              :alt-image="provider.provider_name + 'logo'"
+              :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
+              :title="provider.provider_name"
+              :is-checked="selectedProviders.includes(provider.provider_id)"
             >
-          </AtomsStreamingLabel>
-        </li>
+              <input
+                class="sr-only"
+                type="checkbox"
+                v-model="selectedProviders"
+                :value="provider.provider_id"
+              >
+            </AtomsStreamingLabel>
+          </li>
+        </template>
       </ul>
     </AtomsBaseCard>
     <AtomsBackgroundBlur />
@@ -55,6 +61,8 @@
 <script setup lang="ts">
 import AtomsIconsCross from '../Atoms/Icons/AtomsIconsCross.vue';
 import AtomsIconsSelectAll from '../Atoms/Icons/AtomsIconsSelectAll.vue';
+
+const searchbarValue = ref<string>("")
 
 type Provider = {
   display_priorities: object;
