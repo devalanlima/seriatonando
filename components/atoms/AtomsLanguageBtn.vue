@@ -6,7 +6,7 @@
       class="w-5"
       :country-code="props.code"
     />
-    <p class="text-inherit text-sm">{{ props.code }}</p>
+    <p class="text-inherit text-sm whitespace-nowrap">{{ props.code }}</p>
   </button>
 </template>
 
