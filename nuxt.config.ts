@@ -1,6 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
+  build: {
+    transpile: [
+      'nuxt/app'
+    ]
+  },
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   modules: [
@@ -58,7 +63,7 @@ export default defineNuxtConfig({
         name: "Bulgarian (Bulgaria)",
       },
       {
-        code:"bn-BD",
+        code: "bn-BD",
         iso: "bn-BD",
         name: "Bangla (Bangladesh)"
       },
@@ -321,7 +326,7 @@ export default defineNuxtConfig({
         code: "pl-PL",
         iso: "pl-PL",
         name: "Polish (Poland)",
-      },      
+      },
       {
         code: "pt-BR",
         iso: "pt-BR",
