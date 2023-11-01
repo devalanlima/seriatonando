@@ -40,8 +40,6 @@
 </template>
 
 <script setup lang="ts">
-import AtomsIconsPlusBg from '../Atoms/Icons/AtomsIconsPlusBg.vue';
-
 const el = ref<HTMLElement | null>(null)
 
 const selectedProviders = ref<Array<number>>([])
