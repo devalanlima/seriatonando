@@ -39,7 +39,7 @@
   />
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { AtomsIconsPlusBg } from '#build/components';
 
 
