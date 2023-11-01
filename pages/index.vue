@@ -5,8 +5,7 @@
 </template>
 
 <script setup lang="ts">
-const minValue = ref(1)
-const maxValue = ref(100)
+
 </script>
 
 <style scoped></style>
