@@ -14,9 +14,9 @@ const props = defineProps<Props>();
 
 const regionCode = computed(() => {
   if (props.countryCode.length > 2) {
-    return props.countryCode.split('-')[1].toUpperCase();
+    return props.countryCode.split('-')[1].toLowerCase();
   } else {
-    return props.countryCode.toUpperCase();
+    return props.countryCode.toLowerCase();
   }
 });
 
