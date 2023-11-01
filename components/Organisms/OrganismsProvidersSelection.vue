@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import  AtomsIconsPlusBg  from '../components/Atoms/Icons/AtomsIconsPlusBg.vue'
+import  AtomsIconsPlusBg  from '../Atoms/Icons/AtomsIconsPlusBg.vue'
 
 
 const el = ref<HTMLElement | null>(null)
