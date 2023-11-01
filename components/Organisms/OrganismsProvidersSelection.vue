@@ -21,24 +21,18 @@
           v-if="selectedProviders.includes(provider.provider_id)"
           class="h-fit"
         >
-          <AtomsStreamingLabel
+          <LazyAtomsStreamingInput
             :alt-image="provider.provider_name + 'logo'"
             :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
             :title="provider.provider_name"
-            :is-checked="selectedProviders.includes(provider.provider_id)"
-          >
-            <input
-              class="sr-only"
-              type="checkbox"
-              v-model="selectedProviders"
-              :value="provider.provider_id"
-            >
-          </AtomsStreamingLabel>
+            :input-value="provider.provider_id"
+            v-model="selectedProviders"
+          />
         </li>
       </template>
     </ul>
   </nav>
-  <LazyMoleculesAllProvidersMenu
+  <LazyOrganismsProvidersMenu
     v-model:is-open="menuProvidersIsOpen"
     :providers="allProviders"
     v-model="selectedProviders"
