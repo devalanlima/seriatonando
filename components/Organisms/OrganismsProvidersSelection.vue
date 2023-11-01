@@ -8,7 +8,7 @@
     >
       <li class="h-[55px]">
         <AtomsButtonIcon
-          :icon="AtomsIconsPlusBgVue"
+          :icon="AtomsIconsPlusBg"
           @action="menuProvidersIsOpen = !menuProvidersIsOpen"
           title="Open providers select menu"
         />
@@ -40,7 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import AtomsIconsPlusBgVue from '~/components/Atoms/Icons/AtomsIconsPlusBg.vue';
+import { AtomsIconsPlusBg } from '#build/components';
+
+
 const el = ref<HTMLElement | null>(null)
 
 const selectedProviders = ref<Array<number>>([])
