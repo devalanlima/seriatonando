@@ -11,7 +11,8 @@
     <input
       type="text"
       v-model="searchbarValue"
-      class="pl-8 p-2 w-full focus:outline-none bg-transparent focus:bg-color_primary/10 "
+      class="pl-8 p-2 w-full focus:outline-none bg-transparent focus:bg-color_primary/10 placeholder:text-color_secondary"
+      :placeholder="props.placeholder"
     >
   </label>
 </template>
@@ -19,9 +20,10 @@
 <script setup lang="ts">
 interface Props {
   modelValue: string;
+  placeholder?: string;
 }
 
-const Props = defineProps<Props>()
+const props = defineProps<Props>()
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]
@@ -29,10 +31,14 @@ const emit = defineEmits<{
 
 const searchbarValue = computed({
   get(){
-    return Props.modelValue
+    return props.modelValue
   },
   set(searchbarValue){
     emit('update:modelValue', searchbarValue)
   }
+})
+
+onMounted(()=>{
+  searchbarValue.value = ""
 })
 </script>
