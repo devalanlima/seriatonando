@@ -5,6 +5,7 @@
       type="checkbox"
       class="peer sr-only"
       v-model="isChecked"
+      :value="props.inputValue"
     >
     <div :class="['rounded-md border-2 h-fit w-fit cursor-pointer', isChecked? 'bg-color_primary  border-color_primary' : 'bg-color_secondary border-color_secondary']">
       <AtomsIconsChecked
@@ -18,8 +19,9 @@
 <script setup lang="ts">
 
 interface Props {
-  modelValue?: boolean;
+  modelValue?: Array<any> | boolean;
   title?: string;
+  inputValue?: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -28,7 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 
 const emit = defineEmits<{
-  'update:modelValue': [value: boolean];
+  'update:modelValue': [value: typeof props.modelValue];
 }>()
 
 const isChecked = computed({
