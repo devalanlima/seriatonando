@@ -40,7 +40,8 @@
 </template>
 
 <script setup lang="ts">
-import  AtomsIconsPlusBg  from '../Atoms/Icons/AtomsIconsPlusBg.vue'
+import { AtomsIconsPlusBg } from '#build/components';
+
 
 
 const el = ref<HTMLElement | null>(null)
