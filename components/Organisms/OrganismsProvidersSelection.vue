@@ -39,10 +39,7 @@
   />
 </template>
 
-<script setup>
-import { AtomsIconsPlusBg } from '#build/components';
-
-
+<script setup lang="ts">
 
 const el = ref<HTMLElement | null>(null)
 
