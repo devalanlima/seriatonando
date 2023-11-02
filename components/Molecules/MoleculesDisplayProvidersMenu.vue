@@ -92,6 +92,7 @@ const checkboxValue = ref(false)
 
 watch(() => checkboxValue.value, (newValue) => {
   if (newValue) {
+    isOpen.value = true
     props.array.map(element => {
       if (!selectedProviders.value.includes(element.provider_id)) {
         selectedProviders.value.push(element.provider_id)
@@ -134,5 +135,3 @@ onMounted(() => {
 })
 
 </script>
-
-<style scoped></style>
