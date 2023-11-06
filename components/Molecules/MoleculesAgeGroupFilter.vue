@@ -1,13 +1,17 @@
 <template>
-  <MoleculesMenuFilter btn-title="Age Group" width-card="-left-[150px] w-[300px] lg:-left-[150px] xl:left-0">
+  <MoleculesMenuFilter
+    btn-title="Age Group"
+    width-card="-left-[150px] w-[300px] lg:-left-[150px] xl:left-0"
+  >
     <ul class="grid grid-cols-[repeat(auto-fill,_minmax(60px,_1fr))] gap-5">
       <li>
         <AtomsAgeGroupBtn
-          :input-name="isAllChecked.length === 0 ? 'All' : 'None'"
-          :title="isAllChecked.length === 0 ? 'Select all' : 'Select none'"
-          input-value="All"
+          :input-name="isAllChecked ? 'None' : 'All'"
+          :title="isAllChecked ? 'Select none' : 'Select All'"
+          :input-value="false"
           v-model="isAllChecked"
         />
+        {{ isAllChecked }}
       </li>
       <li
         v-for="region in selectedRegion"
@@ -24,7 +28,6 @@
     </ul>
   </MoleculesMenuFilter>
 </template>
-
 
 <script setup lang="ts">
 
@@ -1546,24 +1549,14 @@ for (const key in response.certifications) {
 }
 
 
-const isAllChecked = ref<Array<string>>([])
+const isAllChecked = ref<boolean>(false)
 
 watch(() => isAllChecked.value, () => {
   selectedGroup.value = []
-  if (isAllChecked.value.includes('All')) {
+  if (isAllChecked.value) {
     selectedRegion.value.forEach(element => {
       selectedGroup.value.push(element.certification)
     });
   }
 })
-
-watch(()=> selectedGroup.value, ()=>{
-  if (selectedGroup.value.length === selectedRegion.value.length) {
-    isAllChecked.value = ["All"]
-  }
-  if (selectedGroup.value.length === 0) {
-    isAllChecked.value = []
-  }
-})
-
 </script>
