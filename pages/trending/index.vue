@@ -1,5 +1,4 @@
 <template>
-  <MoleculesLanguageSelectionMenu/>
 </template>
 
 <script setup lang="ts">
