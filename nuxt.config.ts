@@ -14,7 +14,8 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxtjs/color-mode',
     '@vueuse/nuxt',
-    '@nuxtjs/i18n'
+    '@nuxtjs/i18n',
+    '@pinia/nuxt'
   ],
   postcss: {
     plugins: {
