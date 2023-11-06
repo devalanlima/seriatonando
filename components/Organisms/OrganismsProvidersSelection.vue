@@ -55,15 +55,7 @@ function providersHorizontalScroll(event: WheelEvent) {
   x.value += event.deltaY * 3
 }
 
-type Provider = {
-  display_priorities: object;
-  display_priority: number;
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-}
-
-const providers = {
+const providers: StreamingProviders = {
   "results": [
     {
       "display_priorities": {
