@@ -29,11 +29,6 @@
 </template>
 
 <script setup lang="ts">
-
-const selectedGroup = ref<Array<string>>([])
-
-const region = ref<string>("BR")
-
 const response: Certifications = {
   "certifications": {
     "AU": [
@@ -1536,20 +1531,12 @@ const response: Certifications = {
   }
 }
 
-const selectedRegionCertification = ref<Array<CertificationsRegionContent>>([])
-
-for (const key in response.certifications) {
-  if (Object.prototype.hasOwnProperty.call(response.certifications, key)) {
-    const element = response.certifications[key];
-    if (key === region.value) {
-      selectedRegionCertification.value = element.sort((a, b) => a.order - b.order)
-    }
-  }
-}
+const tmdbFiltersStore = useTMDBFiltersStore()
+const projectStore = useProjectStore()
 
 
 const isAllChecked = ref<boolean>(false)
-
+const selectedGroup = ref<Array<string>>([])
 watch(() => isAllChecked.value, () => {
   selectedGroup.value = []
   if (isAllChecked.value) {
@@ -1558,13 +1545,33 @@ watch(() => isAllChecked.value, () => {
     });
   }
 })
-
-watch(()=>selectedGroup.value, ()=>{
+watch(() => selectedGroup.value, () => {
   if (selectedGroup.value.length === selectedRegionCertification.value.length) {
     isAllChecked.value = true
   }
-  if (selectedGroup.value.length === 0){
+  if (selectedGroup.value.length === 0) {
     isAllChecked.value = false
   }
 })
+
+
+const selectedRegionCertification = ref<Array<CertificationsRegionContent>>([])
+watchEffect(() => {
+  let hasRegion = false
+  for (const key in response.certifications) {
+    if (Object.prototype.hasOwnProperty.call(response.certifications, key)) {
+      const element = response.certifications[key];
+      if (key === tmdbFiltersStore.watchRegion) {
+        selectedRegionCertification.value = element.sort((a, b) => a.order - b.order)
+        hasRegion = true
+      }
+    }
+  }
+  if (!hasRegion) {
+    selectedRegionCertification.value = response.certifications[projectStore.defaultRegion].sort((a, b) => a.order - b.order)
+  }
+  selectedGroup.value = []
+})
+
+
 </script>
