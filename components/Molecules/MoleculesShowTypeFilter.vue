@@ -3,30 +3,43 @@
     <ul class="flex items-center gap-5">
       <li
         v-for="showType in showTypes"
-        :key="showType"
+        :key="showType.value"
       >
-        <AtomsShowTypeLabelFilter
-          :title="showType"
-          :is-checked="selectedShowType.includes(showType)"
-        >
-          <input
-            type="radio"
-            :value="showType"
-            v-model="selectedShowType"
-            name="showTypes"
-            class="sr-only"
-          >
-        </AtomsShowTypeLabelFilter>
+        <AtomsShowTypeFilter
+        v-model="selectedShowType"
+        :value="showType.value"
+        :name="showType.name"
+        :title="`Show ${showType.name}`"
+        />
       </li>
     </ul>
   </nav>
 </template>
 
 <script setup lang="ts">
-const selectedShowType = ref<'All' | 'Movies' | 'Series'>('All')
+const tmdbFiltersStore = useTMDBFiltersStore()
+const selectedShowType = ref<ShowType>("all")
 
-const showTypes = ['All', 'Movies', 'Series']
+watchEffect(()=>{
+  tmdbFiltersStore.setShowType(selectedShowType.value)
+})
+
+const showTypes:Array<{
+  name: string;
+  value: ShowType;
+}> = [
+  {
+    name: "All",
+    value: "all"
+  },
+  {
+    name: "Movies",
+    value: "movies",
+  },
+  {
+    name: "Series",
+    value: "tv"
+  }
+]
 
 </script>
-
-<style scoped></style>
