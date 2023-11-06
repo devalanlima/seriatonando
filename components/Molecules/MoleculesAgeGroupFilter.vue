@@ -11,7 +11,6 @@
           :input-value="false"
           v-model="isAllChecked"
         />
-        {{ isAllChecked }}
       </li>
       <li
         v-for="region in selectedRegion"
