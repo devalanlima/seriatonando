@@ -3,6 +3,7 @@
     <MoleculesAverageRatingFilter/>
     <MoleculesReleaseYearFilter/>
     <MoleculesGenresFilter/>
+    <MoleculesAgeGroupFilter/>
   </section>
 </template>
 
