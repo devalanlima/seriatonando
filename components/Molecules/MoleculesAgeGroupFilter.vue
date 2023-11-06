@@ -13,7 +13,7 @@
         />
       </li>
       <li
-        v-for="region in selectedRegion"
+        v-for="region in selectedRegionCertification"
         :key="region.certification"
         class="grow"
       >
@@ -1536,13 +1536,13 @@ const response: Certifications = {
   }
 }
 
-const selectedRegion = ref<Array<CertificationsRegionContent>>([])
+const selectedRegionCertification = ref<Array<CertificationsRegionContent>>([])
 
 for (const key in response.certifications) {
   if (Object.prototype.hasOwnProperty.call(response.certifications, key)) {
     const element = response.certifications[key];
     if (key === region.value) {
-      selectedRegion.value = element.sort((a, b) => a.order - b.order)
+      selectedRegionCertification.value = element.sort((a, b) => a.order - b.order)
     }
   }
 }
@@ -1553,9 +1553,18 @@ const isAllChecked = ref<boolean>(false)
 watch(() => isAllChecked.value, () => {
   selectedGroup.value = []
   if (isAllChecked.value) {
-    selectedRegion.value.forEach(element => {
+    selectedRegionCertification.value.forEach(element => {
       selectedGroup.value.push(element.certification)
     });
+  }
+})
+
+watch(()=>selectedGroup.value, ()=>{
+  if (selectedGroup.value.length === selectedRegionCertification.value.length) {
+    isAllChecked.value = true
+  }
+  if (selectedGroup.value.length === 0){
+    isAllChecked.value = false
   }
 })
 </script>
