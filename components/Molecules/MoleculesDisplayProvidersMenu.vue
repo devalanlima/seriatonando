@@ -60,14 +60,6 @@ interface Props {
   searchbarValue?: string
 }
 
-type Provider = {
-  display_priorities: object;
-  display_priority: number;
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-}
-
 const props = withDefaults(defineProps<Props>(), {
   isOpen: false,
   searchbarValue: "",

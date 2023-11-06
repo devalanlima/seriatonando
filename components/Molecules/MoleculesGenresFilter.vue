@@ -17,11 +17,10 @@
         class="w-[147px]"
       >
         <label class="flex gap-2 items-center cursor-pointer w-fit">
-          <AtomsCheckbox
-            v-model="genre.isChecked"
-          />
-          <p :class="['select-none', genre.isChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">{{
-            genre.name }}</p>
+          <AtomsCheckbox v-model="genre.isChecked" />
+          <p :class="['select-none', genre.isChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">
+            {{ genre.name }}
+          </p>
         </label>
       </li>
     </ul>
@@ -30,7 +29,7 @@
 
 <script setup lang="ts">
 
-const response = {
+const response: Genres = {
   "genres": [
     {
       "id": 28,

@@ -50,14 +50,6 @@
 
 const searchbarValue = ref<string>("")
 
-type Provider = {
-  display_priorities: object;
-  display_priority: number;
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-}
-
 interface Props {
   providers: Array<Provider>;
   modelValue: Array<number>;

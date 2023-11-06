@@ -10,8 +10,8 @@
       >
         <span
           class="absolute bg-black/70 top-0 w-full text-xs h-6 flex justify-center items-center p-0 -mt-2 pt-2 "
-          v-if="flatrate.length ? false : rent.length ? true : buy.length ? true : false"
-        > {{ rent.length ? 'Rent' : 'Buy' }} </span>
+          v-if="flatrate?.length ? false : rent?.length ? true : buy?.length ? true : false"
+        > {{ rent?.length ? 'Rent' : 'Buy' }} </span>
         <img
           :title="item.provider_name"
           :src="`https://image.tmdb.org/t/p/w500/${item.logo_path}`"
@@ -30,13 +30,14 @@
 
 <script setup lang="ts">
 const el = ref(null)
+const region = 'BR'
 const { width } = useElementSize(el)
 
 const providersNumber = computed(() => {
   return (Math.floor((width.value) / 44))
 })
 
-const response = {
+const response: WatchProviders = {
   "id": 40096,
   "results": {
     "AD": {
@@ -125,7 +126,7 @@ const response = {
           "provider_name": "Telecine Play",
           "display_priority": 1000
         }
-      ], 
+      ],
       "buy": [
         {
           "logo_path": "/peURlLlr8jggOwK53fJ5wdQl05y.jpg",
@@ -146,21 +147,21 @@ const response = {
   }
 }
 
-type MovieProvider = {
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-  display_priority: number;
-};
+const flatrate = ref<Array<WatchProvidersRegionContent> | undefined>([])
+const buy = ref<Array<WatchProvidersRegionContent> | undefined>([])
+const rent = ref<Array<WatchProvidersRegionContent> | undefined>([])
 
-const region = 'BR'
+for (const key in response?.results) {
+  if (Object.prototype.hasOwnProperty.call(response.results, key)) {
+    const element = response.results[key];
+    if (key === region) {
+      flatrate.value = element?.flatrate
+      buy.value = element?.buy
+      rent.value = element?.rent
+    }
+  }
+}
 
-const flatrate: MovieProvider[] = response?.results?.[region]?.flatrate != undefined ? response?.results?.[region]?.flatrate : [];
-const buy: MovieProvider[] = response?.results?.[region]?.buy != undefined ? response?.results?.[region]?.buy : [];
-const rent: MovieProvider[] = response?.results?.[region]?.rent != undefined ? response?.results?.[region]?.rent : [];
-
-const providers = computed(() => flatrate.length ? flatrate : rent.length ? rent : buy.length ? buy : []);
+const providers = computed(() => flatrate.value?.length ? flatrate.value : rent.value?.length ? rent.value : buy.value?.length ? buy.value : []);
 
 </script>
-
-<style scoped></style>
