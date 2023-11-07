@@ -5,28 +5,40 @@
     <AtomsCheckbox
       class="absolute top-2 left-[110px] z-10"
       v-model="watchedMovie"
-      :title="watchedMovie ? `Mark ${movieName} as unseen` : `Mark ${movieName} as seen`"
+      :title="watchedMovie ? `Mark ${props.movieTitle} as unseen` : `Mark ${props.movieTitle} as seen`"
     />
     <a href="#" class="min-w-[140px] block md:rounded-s-xl overflow-hidden">
       <img
         :src="imagePoster"
-        alt="poster"
+        :alt="`Poster of ${props.movieTitle}`"
       >
     </a>
     <AtomsWatchlistBtn
       class="absolute z-10 -top-1 right-5"
       v-model="watchlistMovie"
-      :title="watchlistMovie ? `Remove ${movieName} from watchlist` : `Add ${movieName} to watchlist`"
+      :title="watchlistMovie ? `Remove ${props.movieTitle} from watchlist` : `Add ${props.movieTitle} to watchlist`"
     />
-    <MoleculesCardMovieInfos class="rounded-e-none md:rounded-e-xl rounded-s-none w-full" />
+    <MoleculesCardMovieInfos
+    :movie-title="props.movieTitle"
+    :movie-overview="props.movieOverview"
+    :movie-genres="props.movieGenres"
+    class="rounded-e-none md:rounded-e-xl rounded-s-none w-full" />
   </div>
 </template>
 
 <script setup lang="ts">
 const watchlistMovie = ref(false)
 const watchedMovie = ref(false)
-const movieName = ref('Equalizer')
-const imagePoster = ref('https://via.placeholder.com/140x210')
+const imagePoster = computed(()=> `https://image.tmdb.org/t/p/w200${props.posterPath}`)
+
+interface Props {
+  movieTitle: string;
+  movieOverview: string;
+  posterPath: string;
+  movieGenres: Array<number>;
+}
+
+const props = defineProps<Props>()
 </script>
 
 <style scoped></style>
