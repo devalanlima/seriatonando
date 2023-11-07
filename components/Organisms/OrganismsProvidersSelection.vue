@@ -18,7 +18,7 @@
         :key="provider.provider_id"
       >
         <li
-          v-if="selectedProviders.includes(provider.provider_id)"
+          v-if="tmdbFiltersStore.providers.includes(provider.provider_id)"
           class="h-fit"
         >
           <LazyAtomsStreamingInput
@@ -26,7 +26,7 @@
             :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
             :title="provider.provider_name"
             :input-value="provider.provider_id"
-            v-model="selectedProviders"
+            v-model="tmdbFiltersStore.providers"
           />
         </li>
       </template>
@@ -35,16 +35,16 @@
   <LazyOrganismsProvidersMenu
     v-model:is-open="menuProvidersIsOpen"
     :providers="allProviders"
-    v-model="selectedProviders"
+    v-model="tmdbFiltersStore.providers"
   />
 </template>
 
 <script setup lang="ts">
 import AtomsIconsPlusBg from '../Atoms/Icons/AtomsIconsPlusBg.vue';
 
-const el = ref<HTMLElement | null>(null)
+const tmdbFiltersStore = useTMDBFiltersStore()
 
-const selectedProviders = ref<Array<number>>([])
+const el = ref<HTMLElement | null>(null)
 
 const { x } = useScroll(el, { behavior: 'smooth' })
 
