@@ -2,22 +2,23 @@
   <MoleculesMenuFilter btn-title="Release Year">
     <div class="px-2">
       <AtomsSliderRange
-        v-model:min-value="minYear"
-        v-model:max-value="maxYear"
-        :start-min-value="1865"
-        :start-max-value="new Date().getFullYear()"
+        v-model:min-value="tmdbFiltersStore.releaseYearGte"
+        v-model:max-value="tmdbFiltersStore.releaseYearLte"
+        :start-min-value="minYear"
+        :start-max-value="maxYear"
       />
     </div>
     <div class="flex justify-between">
-      <p class="text-lg font-bold">{{ minYear }}</p>
-      <p class="text-lg font-bold">{{ maxYear }}</p>
+      <p class="text-lg font-bold">{{ tmdbFiltersStore.releaseYearGte }}</p>
+      <p class="text-lg font-bold">{{ tmdbFiltersStore.releaseYearLte }}</p>
     </div>
   </MoleculesMenuFilter>
 </template>
 
 <script setup lang="ts">
-const minYear = ref(1865)
-const maxYear = ref(new Date().getFullYear())  
+const tmdbFiltersStore = useTMDBFiltersStore()
+const minYear = 1865
+const maxYear = new Date().getFullYear()
 </script>
 
 <style scoped></style>
