@@ -21,7 +21,7 @@
           :input-name="region.certification"
           :title="region.meaning"
           :input-value="region.certification"
-          v-model="selectedGroup"
+          v-model="tmdbFiltersStore.certifications"
         />
       </li>
     </ul>
@@ -1536,20 +1536,19 @@ const projectStore = useProjectStore()
 
 
 const isAllChecked = ref<boolean>(false)
-const selectedGroup = ref<Array<string>>([])
 watch(() => isAllChecked.value, () => {
-  selectedGroup.value = []
+  tmdbFiltersStore.certifications = []
   if (isAllChecked.value) {
     selectedRegionCertification.value.forEach(element => {
-      selectedGroup.value.push(element.certification)
+      tmdbFiltersStore.certifications.push(element.certification)
     });
   }
 })
-watch(() => selectedGroup.value, () => {
-  if (selectedGroup.value.length === selectedRegionCertification.value.length) {
+watch(() => tmdbFiltersStore.certifications, () => {
+  if (tmdbFiltersStore.certifications.length === selectedRegionCertification.value.length) {
     isAllChecked.value = true
   }
-  if (selectedGroup.value.length === 0) {
+  if (tmdbFiltersStore.certifications.length === 0) {
     isAllChecked.value = false
   }
 })
@@ -1570,7 +1569,7 @@ watchEffect(() => {
   if (!hasRegion) {
     selectedRegionCertification.value = response.certifications[projectStore.defaultRegion].sort((a, b) => a.order - b.order)
   }
-  selectedGroup.value = []
+  tmdbFiltersStore.certifications = []
 })
 
 
