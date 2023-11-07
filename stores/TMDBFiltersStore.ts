@@ -30,9 +30,10 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   //genres
   const genres = ref<Array<number>>([]);
 
+  //age group
+  const certifications = ref<Array<string>>([])
 
-  
-  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, genres };
+  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, genres, certifications };
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useTMDBFiltersStore, import.meta.hot));
