@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+const tmdbFiltersStore = useTMDBFiltersStore()
 
 const response: Genres = {
   "genres": [
@@ -138,15 +139,13 @@ for (const genre of response.genres) {
   })
 }
 
-const checkedGenres = ref<Array<number>>([])
-
 onMounted(() => {
   watch(allGenres.value, () => {
     let numberOfCheckedGenres = 0
-    checkedGenres.value = []
+    tmdbFiltersStore.genres = []
     for (const genre of allGenres.value) {
       if (genre.isChecked) {
-        checkedGenres.value.push(genre.id)
+        tmdbFiltersStore.genres.push(genre.id)
         numberOfCheckedGenres++
       }
     }
