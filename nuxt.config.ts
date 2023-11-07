@@ -440,5 +440,11 @@ export default defineNuxtConfig({
       }
     ],
   },
+  runtimeConfig: {
+    TMDB_KEY: process.env.NUXT_TMDB_TOKEN ,
+    public:{
+      TMDB_URL: "https://api.themoviedb.org/3"
+    }
+  },
   ssr: true
 })
