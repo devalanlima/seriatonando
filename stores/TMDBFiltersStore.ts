@@ -16,7 +16,7 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   const releaseYearGte = ref<number>(1865);
   const releaseDateLte = computed<string>(() => {
     if (releaseYearLte.value === new Date().getFullYear()) {
-      return `${releaseYearLte.value}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
+      return `${releaseYearLte.value}-${new Date().getMonth() + 1}-${new Date().getDate().toString().padStart(2, '0')}`;
     } else {
       return `${releaseYearLte.value}-12-31`;
     }
