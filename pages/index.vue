@@ -3,10 +3,10 @@
     <OrganismsMovieCard
       v-for="load in 20"
       :key="load"
-      movie-title="Loading..."
-      :movie-genres="[0]"
-      movie-overview="Loading..."
-      poster-path="loading..."
+      movie-title="loading"
+      movie-genres="loading"
+      movie-overview="loading"
+      poster-path="loading"
     />
   </template>
   <template v-else>
@@ -16,7 +16,7 @@
       :movie-title="(typeof movie.title === 'string' ? movie.title : typeof movie.name === 'string' ? movie.name : movie.original_title)"
       :movie-genres="movie.genre_ids"
       :movie-overview="movie.overview"
-      :poster-path="movie.poster_path"
+      :poster-path="(movie.poster_path != null? movie.poster_path: 'not found')"
     />
   </template>
 </template>

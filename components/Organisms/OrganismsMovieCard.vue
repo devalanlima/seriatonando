@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex md:rounded-xl outline-2 outline outline-transparent hover:outline-color_primary relative w-full h-[210px] max-w-[768px] transition-color duration-300"
+    class="flex md:rounded-xl hover:outline-2 hover:outline hover:outline-color_primary relative w-full h-[210px] max-w-[768px] transition-color duration-300 outline outline-2 outline-color_terciary"
   >
     <AtomsCheckbox
       class="absolute top-2 left-[110px] z-10"
@@ -8,7 +8,10 @@
       :title="watchedMovie ? `Mark ${props.movieTitle} as unseen` : `Mark ${props.movieTitle} as seen`"
     />
     <a href="#" class="min-w-[140px] block md:rounded-s-xl overflow-hidden">
+      <div v-if="props.posterPath === 'loading'" class="w-full h-full block bg-color_secondary animate-pulse"></div>
+      <div v-else-if="props.posterPath === 'not found'" class="w-full h-full bg-color_secondary/50 grid place-items-center px-5 text-center text-color_terciary">Poster not found</div>
       <img
+        v-else
         :src="imagePoster"
         :alt="`Poster of ${props.movieTitle}`"
       >
@@ -29,13 +32,19 @@
 <script setup lang="ts">
 const watchlistMovie = ref(false)
 const watchedMovie = ref(false)
-const imagePoster = computed(()=> `https://image.tmdb.org/t/p/w200${props.posterPath}`)
+const imagePoster = computed<string>(()=>{
+  if (props.posterPath === 'not found') {
+    return 'not found'
+  } else {
+    return `https://image.tmdb.org/t/p/w200${props.posterPath}`
+  }
+})
 
 interface Props {
   movieTitle: string;
   movieOverview: string;
-  posterPath: string;
-  movieGenres: Array<number>;
+  posterPath?: string;
+  movieGenres: Array<number> | 'loading';
 }
 
 const props = defineProps<Props>()
