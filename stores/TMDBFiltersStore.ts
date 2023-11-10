@@ -13,7 +13,7 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
 
   //release year/date
   const releaseYearLte = ref<number>(Number(new Date().getFullYear()));
-  const releaseYearGte = ref<number>(1865);
+  const releaseYearGte = ref<number>(1904);
   const releaseDateLte = computed<string>(() => {
     if (releaseYearLte.value === new Date().getFullYear()) {
       return `${releaseYearLte.value}-${new Date().getMonth() + 1}-${new Date().getDate().toString().padStart(2, '0')}`;
@@ -36,7 +36,10 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   //providers
   const providers = ref<Array<number>>([])
 
-  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, genres, certifications, providers };
+  //sort by
+  const sortBy = ref<SortBy>('primary_release_date.desc')
+
+  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, genres, certifications, providers, sortBy };
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useTMDBFiltersStore, import.meta.hot));
