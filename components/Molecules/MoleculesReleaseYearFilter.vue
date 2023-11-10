@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 const tmdbFiltersStore = useTMDBFiltersStore()
-const minYear = 1865
+const minYear = ref(tmdbFiltersStore.releaseYearGte)
 const maxYear = new Date().getFullYear()
 </script>
 
