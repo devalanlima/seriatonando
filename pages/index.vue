@@ -3,20 +3,22 @@
     <OrganismsMovieCard
       v-for="load in 20"
       :key="load"
-      movie-title="loading"
-      movie-genres="loading"
-      movie-overview="loading"
+      show-title="loading"
+      show-genres="loading"
+      show-overview="loading"
       poster-path="loading"
+      show-type="all"
     />
   </template>
   <template v-else>
     <OrganismsMovieCard
-      v-for="movie in allShows.sort((a, b) => b.popularity - a.popularity)"
-      :key="movie.id"
-      :movie-title="movie.title"
-      :movie-genres="movie.genres"
-      :movie-overview="movie.overview"
-      :poster-path="(movie.posterPath != null ? movie.posterPath : 'not found')"
+      v-for="show in allShows.sort((a, b) => b.popularity - a.popularity)"
+      :key="show.id"
+      :show-title="show.title"
+      :show-genres="show.genres"
+      :show-overview="show.overview"
+      :poster-path="(show.posterPath != null ? show.posterPath : 'not found')"
+      :show-type="show.showType"
     />
   </template>
 </template>
@@ -43,7 +45,7 @@ const movieParams = computed(() => {
     "vote_count.gte": 100,
     "with_watch_providers": tmdbFiltersStore.providers.join('|'),
     "certification": tmdbFiltersStore.certifications.join('|'),
-    "with_genres": tmdbFiltersStore.genres.join('|'),
+    "with_genres": tmdbFiltersStore.movieGenres.join('|'),
   };
 });
 
@@ -60,7 +62,7 @@ const tvParams = computed(() => {
     "watch_region": projectStore.region,
     "vote_count.gte": 100,
     "with_watch_providers": tmdbFiltersStore.providers.join('|'),
-    "with_genres": tmdbFiltersStore.genres.join('|'),
+    "with_genres": tmdbFiltersStore.tvGenres.join('|'),
   };
 });
 
