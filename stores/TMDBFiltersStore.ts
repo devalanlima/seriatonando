@@ -40,7 +40,10 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   //sort by
   const sortBy = ref<SortBy>('primary_release_date.desc')
 
-  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy };
+  //vote count
+  const minVoteCount = ref(100)
+
+  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy, minVoteCount };
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useTMDBFiltersStore, import.meta.hot));
