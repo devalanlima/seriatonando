@@ -4,6 +4,7 @@
     <MoleculesReleaseYearFilter/>
     <MoleculesGenresFilter/>
     <MoleculesAgeGroupFilter/>
+    <MoleculesVoteCountFilter/>
   </section>
 </template>
 
