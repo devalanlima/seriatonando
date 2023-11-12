@@ -3,158 +3,110 @@
     btn-title="Genres"
     width-card="w-[450px] -left-[350px] md:w-[600px] lg:w-[700px] lg:-left-[150px] xl:left-0"
   >
-    <ul class="grid grid-cols-[repeat(auto-fit,_minmax(147px,_1fr))] place-items-center gap-6 w-full">
-      <li class="w-[147px]">
-        <label class="flex gap-2 items-center cursor-pointer w-fit">
-          <AtomsCheckbox v-model="isAllChecked" />
-          <p :class="['select-none', isAllChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">{{
-            isAllChecked ? 'Unselect All' : 'Select All' }}</p>
-        </label>
-      </li>
-      <li
-        v-for="genre in allGenres"
-        :key="genre.id"
-        class="w-[147px]"
-      >
-        <label class="flex gap-2 items-center cursor-pointer w-fit">
-          <AtomsCheckbox v-model="genre.isChecked" />
-          <p :class="['select-none', genre.isChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">
-            {{ genre.name }}
-          </p>
-        </label>
-      </li>
-    </ul>
+    <div class="flex flex-col gap-5">
+      <MoleculesChooseType v-model="showType" />
+      <ul class="grid grid-cols-[repeat(auto-fit,_minmax(147px,_1fr))] place-items-center gap-6 w-full">
+        <li class="w-[147px]">
+          <label
+            class="flex gap-2 items-center cursor-pointer w-fit"
+            v-if="showType === 'movies'"
+          >
+            <AtomsCheckbox v-model="isAllMoviesChecked"/>
+            <p :class="['select-none', isAllMoviesChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">
+              {{ tmdbFiltersStore.movieGenres.length === tmdbConfigStore.movieGenres.genres.length ? 'Unselect All' :
+                'Select All' }}
+            </p>
+          </label>
+          <label
+            class="flex gap-2 items-center cursor-pointer w-fit"
+            v-if="showType === 'tv'"
+          >
+            <AtomsCheckbox v-model="isAllTvChecked"/>
+            <p :class="['select-none', isAllTvChecked ? 'text-color_primary font-semibold' : 'text-color_secondary']">
+              {{ tmdbFiltersStore.tvGenres.length === tmdbConfigStore.tvGenres.genres.length ? 'Unselect All' :
+                'Select All' }}
+            </p>
+          </label>
+        </li>
+        <li
+          v-for="genre in (showType === 'movies' ? tmdbConfigStore.movieGenres.genres : tmdbConfigStore.tvGenres.genres)"
+          :key="genre.id"
+          class="w-[147px]"
+        >
+          <label class="flex gap-2 items-center cursor-pointer w-fit">
+            <template v-if="showType === 'movies'">
+              <AtomsCheckbox
+                v-model="tmdbFiltersStore.movieGenres"
+                :input-value="genre.id"
+              />
+            </template>
+            <template v-if="showType === 'tv'">
+              <AtomsCheckbox
+                v-model="tmdbFiltersStore.tvGenres"
+                :input-value="genre.id"
+              />
+            </template>
+            <p v-if="showType === 'movies'" :class="['select-none', tmdbFiltersStore.movieGenres.includes(genre.id) ? 'text-color_primary font-semibold' : 'text-color_secondary']">
+              {{ genre.name }}
+            </p>
+            <p v-if="showType === 'tv'" :class="['select-none', tmdbFiltersStore.tvGenres.includes(genre.id) ? 'text-color_primary font-semibold' : 'text-color_secondary']">
+              {{ genre.name }}
+            </p>
+          </label>
+        </li>
+      </ul>
+    </div>
   </MoleculesMenuFilter>
 </template>
 
 <script setup lang="ts">
 const tmdbFiltersStore = useTMDBFiltersStore()
+const tmdbConfigStore = useTMDBConfigStore()
+const isAllMoviesChecked = ref<boolean>(false)
+const isAllTvChecked = ref<boolean>(false)
+const showType = ref<ShowType>('movies')
 
-const response: Genres = {
-  "genres": [
-    {
-      "id": 28,
-      "name": "Ação"
-    },
-    {
-      "id": 12,
-      "name": "Aventura"
-    },
-    {
-      "id": 16,
-      "name": "Animação"
-    },
-    {
-      "id": 35,
-      "name": "Comédia"
-    },
-    {
-      "id": 80,
-      "name": "Crime"
-    },
-    {
-      "id": 99,
-      "name": "Documentário"
-    },
-    {
-      "id": 18,
-      "name": "Drama"
-    },
-    {
-      "id": 10751,
-      "name": "Família"
-    },
-    {
-      "id": 14,
-      "name": "Fantasia"
-    },
-    {
-      "id": 36,
-      "name": "História"
-    },
-    {
-      "id": 27,
-      "name": "Terror"
-    },
-    {
-      "id": 10402,
-      "name": "Música"
-    },
-    {
-      "id": 9648,
-      "name": "Mistério"
-    },
-    {
-      "id": 10749,
-      "name": "Romance"
-    },
-    {
-      "id": 878,
-      "name": "Ficção científica"
-    },
-    {
-      "id": 10770,
-      "name": "Cinema TV"
-    },
-    {
-      "id": 53,
-      "name": "Thriller"
-    },
-    {
-      "id": 10752,
-      "name": "Guerra"
-    },
-    {
-      "id": 37,
-      "name": "Faroeste"
-    }
-  ]
-}
-
-const isAllChecked = ref<boolean>(false)
-
-watch(() => isAllChecked.value, (newValue) => {
-  if (newValue) {
-    for (const genre of allGenres.value) {
-      genre.isChecked = true
-    }
-  } else {
-    for (const genre of allGenres.value) {
-      genre.isChecked = false
-    }
+watch(()=> tmdbFiltersStore.movieGenres, ()=>{
+  if (tmdbFiltersStore.movieGenres.length === tmdbConfigStore.movieGenres.genres.length) {
+    isAllMoviesChecked.value = true
+  }
+  if (tmdbFiltersStore.movieGenres.length === 0) {
+    isAllMoviesChecked.value = false
   }
 })
 
-const allGenres = ref<Array<{
-  id: number;
-  name: string;
-  isChecked: boolean;
-}>>([])
-
-for (const genre of response.genres) {
-  allGenres.value.push({
-    id: genre.id,
-    name: genre.name,
-    isChecked: false
-  })
-}
-
-onMounted(() => {
-  watch(allGenres.value, () => {
-    let numberOfCheckedGenres = 0
-    tmdbFiltersStore.genres = []
-    for (const genre of allGenres.value) {
-      if (genre.isChecked) {
-        tmdbFiltersStore.genres.push(genre.id)
-        numberOfCheckedGenres++
-      }
-    }
-    if (numberOfCheckedGenres === allGenres.value.length) {
-      isAllChecked.value = true
-    }
-    if (numberOfCheckedGenres === 0) {
-      isAllChecked.value = false
-    }
-  })
+watch(()=> tmdbFiltersStore.tvGenres, ()=>{
+  if (tmdbFiltersStore.tvGenres.length === tmdbConfigStore.tvGenres.genres.length) {
+    isAllTvChecked.value = true
+  }
+  if (tmdbFiltersStore.movieGenres.length === 0) {
+    isAllTvChecked.value = false
+  }
 })
+
+watch(() => isAllMoviesChecked.value, (newValue) => {
+  if (showType.value === 'movies' && newValue) {
+    tmdbFiltersStore.movieGenres = []
+    tmdbConfigStore.movieGenres.genres.forEach(genre => {
+      tmdbFiltersStore.movieGenres.push(genre.id)
+    });
+  }
+  if (showType.value === 'movies' && !newValue) {
+    tmdbFiltersStore.movieGenres = []
+  }
+
+})
+
+watch(() => isAllTvChecked.value, (newValue) => {
+  if (showType.value === 'tv' && newValue) {
+    tmdbFiltersStore.tvGenres = []
+    tmdbConfigStore.tvGenres.genres.forEach(genre => {
+      tmdbFiltersStore.tvGenres.push(genre.id)
+    });
+  }
+  if (showType.value === 'tv' && !newValue) {
+    tmdbFiltersStore.tvGenres = []
+  }
+})
+
 </script>
