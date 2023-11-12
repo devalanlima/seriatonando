@@ -8,7 +8,7 @@ declare global {
     overview: string;
     posterPath: string;
     popularity: number;
-    showType: 'movie' | 'tv';
+    showType: ShowType;
   }
 
   type SortBy = 
