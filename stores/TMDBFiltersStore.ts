@@ -28,7 +28,8 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   const voteAverageGte = ref<number>(0);
 
   //genres
-  const genres = ref<Array<number>>([]);
+  const movieGenres = ref<Array<number>>([]);
+  const tvGenres = ref<Array<number>>([])
 
   //age group
   const certifications = ref<Array<string>>([])
@@ -39,7 +40,7 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   //sort by
   const sortBy = ref<SortBy>('primary_release_date.desc')
 
-  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, genres, certifications, providers, sortBy };
+  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy };
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useTMDBFiltersStore, import.meta.hot));
