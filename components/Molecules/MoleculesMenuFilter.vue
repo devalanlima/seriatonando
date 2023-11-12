@@ -10,7 +10,7 @@
     <LazyAtomsBaseCard
       color="bg-color_highlight"
       v-if="isFilterOpen"
-      :class="['absolute flex flex-col top-14 z-20 overflow-hidden shadow-md shadow-black/50', props.widthCard? props.widthCard: 'w-[300px] left-0']"
+      :class="['absolute flex flex-col top-14 z-20  shadow-md shadow-black/50', props.widthCard? props.widthCard: 'w-[300px] left-0']"
       ref="target"
     >
       <slot/>
