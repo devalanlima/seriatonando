@@ -5,7 +5,7 @@
     <AtomsCheckbox
       class="absolute top-2 left-[110px] z-10"
       v-model="watchedMovie"
-      :title="watchedMovie ? `Mark ${props.movieTitle} as unseen` : `Mark ${props.movieTitle} as seen`"
+      :title="watchedMovie ? `Mark ${props.showTitle} as unseen` : `Mark ${props.showTitle} as seen`"
     />
     <a href="#" class="min-w-[140px] block md:rounded-s-xl overflow-hidden">
       <div v-if="props.posterPath === 'loading'" class="w-full h-full block bg-color_secondary animate-pulse"></div>
@@ -13,18 +13,19 @@
       <img
         v-else
         :src="imagePoster"
-        :alt="`Poster of ${props.movieTitle}`"
+        :alt="`Poster of ${props.showTitle}`"
       >
     </a>
     <AtomsWatchlistBtn
       class="absolute z-10 -top-1 right-5"
       v-model="watchlistMovie"
-      :title="watchlistMovie ? `Remove ${props.movieTitle} from watchlist` : `Add ${props.movieTitle} to watchlist`"
+      :title="watchlistMovie ? `Remove ${props.showTitle} from watchlist` : `Add ${props.showTitle} to watchlist`"
     />
     <MoleculesCardMovieInfos
-    :movie-title="props.movieTitle"
-    :movie-overview="props.movieOverview"
-    :movie-genres="props.movieGenres"
+    :show-title="props.showTitle"
+    :show-overview="props.showOverview"
+    :show-genres="props.showGenres"
+    :show-type="props.showType"
     class="rounded-e-none md:rounded-e-xl rounded-s-none w-full" />
   </div>
 </template>
@@ -41,10 +42,11 @@ const imagePoster = computed<string>(()=>{
 })
 
 interface Props {
-  movieTitle: string;
-  movieOverview: string;
+  showTitle: string;
+  showOverview: string;
   posterPath?: string;
-  movieGenres: Array<number> | 'loading';
+  showGenres: Array<number> | 'loading';
+  showType: ShowType;
 }
 
 const props = defineProps<Props>()
