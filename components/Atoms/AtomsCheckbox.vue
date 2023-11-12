@@ -4,7 +4,7 @@
     <input
       type="checkbox"
       class="peer sr-only"
-      v-model="isChecked"
+      v-model="selectedValues"
       :value="props.inputValue"
     >
     <div :class="['rounded-md border-2 h-fit w-fit cursor-pointer', isChecked? 'bg-color_primary  border-color_primary' : 'bg-color_secondary border-color_secondary']">
@@ -26,6 +26,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
+  inputValue: false
 })
 
 
@@ -33,12 +34,20 @@ const emit = defineEmits<{
   'update:modelValue': [value: typeof props.modelValue];
 }>()
 
-const isChecked = computed({
+const selectedValues = computed({
   get() {
-    return props.modelValue;
+    return props.modelValue
   },
-  set(isChecked) {
-    emit('update:modelValue', isChecked);
+  set(selectedValues) {
+    emit("update:modelValue", selectedValues)
+  }
+})
+
+const isChecked = computed(()=> {
+  if (typeof props.modelValue !== 'boolean') {
+    return props.modelValue.includes(props.inputValue);
+  } else {
+    return props.modelValue;
   }
 })
 
