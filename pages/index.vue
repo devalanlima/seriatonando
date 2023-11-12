@@ -42,7 +42,7 @@ const movieParams = computed(() => {
     "vote_average.gte": tmdbFiltersStore.voteAverageGte,
     "vote_average.lte": tmdbFiltersStore.voteAverageLte,
     "watch_region": projectStore.region,
-    "vote_count.gte": 100,
+    "vote_count.gte": tmdbFiltersStore.minVoteCount,
     "with_watch_providers": tmdbFiltersStore.providers.join('|'),
     "certification": tmdbFiltersStore.certifications.join('|'),
     "with_genres": tmdbFiltersStore.movieGenres.join('|'),
@@ -60,7 +60,7 @@ const tvParams = computed(() => {
     "vote_average.gte": tmdbFiltersStore.voteAverageGte,
     "vote_average.lte": tmdbFiltersStore.voteAverageLte,
     "watch_region": projectStore.region,
-    "vote_count.gte": 100,
+    "vote_count.gte": tmdbFiltersStore.minVoteCount,
     "with_watch_providers": tmdbFiltersStore.providers.join('|'),
     "with_genres": tmdbFiltersStore.tvGenres.join('|'),
   };
