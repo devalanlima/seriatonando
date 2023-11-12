@@ -10,7 +10,7 @@ export default async function useCallCustomApiResponse(url: string, params: obje
         overview: item.overview,
         posterPath: item.poster_path,
         popularity: item.popularity,
-        showType: 'title' in item? 'movie' : 'tv',
+        showType: 'title' in item? 'movies' : 'tv',
       }));
     },
   })
