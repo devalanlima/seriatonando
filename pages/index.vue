@@ -144,7 +144,6 @@ watch(() => tmdbFiltersStore.showType, (newValue, oldValue) => {
 
 tmdbFiltersStore.$subscribe(async (mutation, state) => {
   canCallNewPage.value = false;
-  console.log('trigger');
 
   clearTimeout(timeoutId);
   timeoutId = setTimeout(async () => {
