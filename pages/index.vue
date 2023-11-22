@@ -1,41 +1,56 @@
 <template>
-  <template v-if="moviePending && tvPending">
-    <OrganismsMovieCard
-      v-for="load in 20"
-      :key="load"
-      show-title="loading"
-      show-genres="loading"
-      show-overview="loading"
-      poster-path="loading"
-      show-type="all"
-    />
-  </template>
-  <template v-else>
-    <OrganismsMovieCard
-      v-for="show in allShows.sort((a, b) => b.popularity - a.popularity)"
-      :key="show.id"
-      :show-title="show.title"
-      :show-genres="show.genres"
-      :show-overview="show.overview"
-      :poster-path="(show.posterPath != null ? show.posterPath : 'not found')"
-      :show-type="show.showType"
-    />
-  </template>
+  <article
+    :class="'h-screen overflow-y-auto pr-3'"
+    ref="containerProps"
+  >
+    <ul class="p-1 gap-5 grid grid-cols-[repeat(auto-fit,_minmax(375px,_1fr))] justify-items-center min-h-screen">
+      <template v-if="isNotLoading">
+        <template v-for="show in allShows">
+          <li
+            class="w-full h-[210px] max-w-fit"
+            v-if="tmdbFiltersStore.showType === show.showType || tmdbFiltersStore.showType === 'all'"
+          >
+            <OrganismsMovieCard
+              :show-title="show.title"
+              :show-genres="show.genres"
+              :show-overview="show.overview"
+              :poster-path="(show.posterPath != null ? show.posterPath : 'not found')"
+              :show-type="show.showType"
+            />
+          </li>
+        </template>
+      </template>
+      <template v-if="isLoading">
+        <li
+          class="w-full"
+          v-for="load in 20"
+          :key="load"
+        >
+          <OrganismsMovieCard
+            show-title="loading"
+            show-genres="loading"
+            show-overview="loading"
+            poster-path="loading"
+            show-type="all"
+          />
+        </li>
+      </template>
+    </ul>
+  </article>
 </template>
 
 <script setup lang="ts">
-import useDebouncedComputed from '~/composables/UseDebouncedComputed';
+const projectStore = useProjectStore();
+const tmdbFiltersStore = useTMDBFiltersStore();
 
-const projectStore = useProjectStore()
-const tmdbFiltersStore = useTMDBFiltersStore()
-
+const containerProps = ref<HTMLElement | null>(null);
+const { y: verticalContainerScroll } = useScroll(containerProps);
 
 const movieParams = computed(() => {
   return {
     "language": projectStore.language,
-    "certification_country": projectStore.region,
-    "page": 1,
-    "region": projectStore.region,
+    "certification_country": tmdbFiltersStore.certifications.length > 0 ? projectStore.region : undefined,
+    "page": tmdbFiltersStore.moviePage,
     "primary_release_date.gte": tmdbFiltersStore.releaseDateGte,
     "primary_release_date.lte": tmdbFiltersStore.releaseDateLte,
     "sort_by": tmdbFiltersStore.sortBy,
@@ -43,17 +58,16 @@ const movieParams = computed(() => {
     "vote_average.lte": tmdbFiltersStore.voteAverageLte,
     "watch_region": projectStore.region,
     "vote_count.gte": tmdbFiltersStore.minVoteCount,
-    "with_watch_providers": tmdbFiltersStore.providers.join('|'),
-    "certification": tmdbFiltersStore.certifications.join('|'),
-    "with_genres": tmdbFiltersStore.movieGenres.join('|'),
+    "with_watch_providers": tmdbFiltersStore.providers.length > 0 ? tmdbFiltersStore.providers.join('|') : undefined,
+    "with_genres": tmdbFiltersStore.movieGenres.length > 0 ? tmdbFiltersStore.movieGenres.join('|') : undefined,
+    "certification": tmdbFiltersStore.certifications.length > 0 ? tmdbFiltersStore.certifications.join('|') : undefined,
   };
 });
 
 const tvParams = computed(() => {
   return {
     "language": projectStore.language,
-    "page": 1,
-    "region": projectStore.region,
+    "page": tmdbFiltersStore.tvPage,
     "air_date.gte": tmdbFiltersStore.releaseDateGte,
     "air_date.lte": tmdbFiltersStore.releaseDateLte,
     "sort_by": tmdbFiltersStore.sortBy,
@@ -61,27 +75,164 @@ const tvParams = computed(() => {
     "vote_average.lte": tmdbFiltersStore.voteAverageLte,
     "watch_region": projectStore.region,
     "vote_count.gte": tmdbFiltersStore.minVoteCount,
-    "with_watch_providers": tmdbFiltersStore.providers.join('|'),
-    "with_genres": tmdbFiltersStore.tvGenres.join('|'),
+    "with_watch_providers": tmdbFiltersStore.providers.length > 0 ? tmdbFiltersStore.providers.join('|') : undefined,
+    "with_genres": tmdbFiltersStore.tvGenres.length > 0 ? tmdbFiltersStore.tvGenres.join('|') : undefined,
   };
 });
 
-const debouncedMovieParams = useDebouncedComputed(movieParams);
-const debouncedTvParams = useDebouncedComputed(tvParams);
+const { data: movieShow } = await UseCallCustomApiResponse('/api/TMDBDiscoverMovie', movieParams.value);
+const { data: tvShow } = await UseCallCustomApiResponse('/api/TMDBDiscoverTv', tvParams.value);
 
-const { data: movieShow, pending: moviePending } = await UseCallCustomApiResponse('/api/TMDBDiscoverMovie', debouncedMovieParams);
-const { data: tvShow, pending: tvPending } = await UseCallCustomApiResponse('/api/TMDBDiscoverTv', debouncedTvParams);
+const allShows = ref([...movieShow.value?.results || [], ...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity))
 
-const allShows = computed<Array<MoviesAndTv>>(() => {
-  let all: Array<MoviesAndTv> = []
-  if (tmdbFiltersStore.showType === 'all') {
-    all = [...movieShow.value as Array<MoviesAndTv>, ...tvShow.value as Array<MoviesAndTv>]
-  } else if (tmdbFiltersStore.showType === 'movies') {
-    all = [...movieShow.value as Array<MoviesAndTv>]
-  } else if (tmdbFiltersStore.showType === 'tv') {
-    all = [...tvShow.value as Array<MoviesAndTv>]
+const lastMoviePage = ref(tmdbFiltersStore.moviePage);
+const lastTvPage = ref(tmdbFiltersStore.tvPage);
+const totalMoviePages = ref(movieShow.value?.totalPages);
+const totalTvPages = ref(tvShow.value?.totalPages);
+const pending = ref(false);
+
+let timeoutId: ReturnType<typeof setTimeout>;
+const canCallNewPage = ref(true);
+useInfiniteScroll(
+  containerProps,
+  () => {
+    if (canCallNewPage.value) {
+      clearTimeout(timeoutId);
+      if (tmdbFiltersStore.showType === 'all') {
+        if (totalMoviePages.value !== undefined ? tmdbFiltersStore.moviePage < totalMoviePages.value : false) {
+          tmdbFiltersStore.moviePage++;
+        }
+        if (totalTvPages.value !== undefined ? tmdbFiltersStore.tvPage < totalTvPages.value : false) {
+          tmdbFiltersStore.tvPage++;
+        }
+        if (tmdbFiltersStore.moviePage === totalMoviePages.value && tmdbFiltersStore.tvPage === totalTvPages.value || 0 === totalMoviePages.value && 0 === totalTvPages.value) {
+          canCallNewPage.value = false
+        }
+      } else if (tmdbFiltersStore.showType === 'movies') {
+        if (totalMoviePages.value !== undefined ? tmdbFiltersStore.moviePage < totalMoviePages.value : false) {
+          tmdbFiltersStore.moviePage++;
+        }
+        if (tmdbFiltersStore.moviePage === totalMoviePages.value || totalMoviePages.value === 0) {
+          canCallNewPage.value = false
+        }
+      } else if (tmdbFiltersStore.showType === 'tv') {
+        if (totalTvPages.value !== undefined ? tmdbFiltersStore.tvPage < totalTvPages.value : false) {
+          tmdbFiltersStore.tvPage++;
+        }
+        if (tmdbFiltersStore.tvPage === totalTvPages.value || totalTvPages.value === 0) {
+          canCallNewPage.value = false
+        }
+      }
+    }
+  },
+  { distance: 1000 }
+);
+
+const resetPage = () => {
+  verticalContainerScroll.value = 0;
+  allShows.value = [];
+}
+
+watch(() => tmdbFiltersStore.showType, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    tmdbFiltersStore.moviePage = 1;
+    tmdbFiltersStore.tvPage = 1;
+    clearTimeout(timeoutId);
+    resetPage();
   }
-  return all;
+})
+
+tmdbFiltersStore.$subscribe(async (mutation, state) => {
+  canCallNewPage.value = false;
+  console.log('trigger');
+
+  clearTimeout(timeoutId);
+  timeoutId = setTimeout(async () => {
+    pending.value = true;
+    if (state.showType === 'all') {
+      if (lastMoviePage.value === state.moviePage || lastTvPage.value === state.tvPage) {
+        resetPage();
+        if (state.moviePage !== 1 || state.tvPage !== 1) {
+          state.moviePage = 1;
+          state.tvPage = 1;
+        }
+      }
+      const { data: movieShow } = await UseCallCustomApiResponse('/api/TMDBDiscoverMovie', movieParams.value);
+      const { data: tvShow } = await UseCallCustomApiResponse('/api/TMDBDiscoverTv', tvParams.value);
+      allShows.value.push(...[...movieShow.value?.results || [], ...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
+      lastMoviePage.value = state.moviePage;
+      lastTvPage.value = state.tvPage;
+      totalMoviePages.value = movieShow.value?.totalPages;
+      totalTvPages.value = tvShow.value?.totalPages;
+      canCallNewPage.value = true;
+
+    } else if (state.showType === 'movies') {
+      if (lastMoviePage.value === state.moviePage) {
+        resetPage();
+        if (state.moviePage !== 1) {
+          state.moviePage = 1;
+        }
+      }
+      const { data: movieShow } = await UseCallCustomApiResponse('/api/TMDBDiscoverMovie', movieParams.value);
+      allShows.value.push(...[...movieShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
+      lastMoviePage.value = state.moviePage;
+      totalMoviePages.value = movieShow.value?.totalPages;
+      canCallNewPage.value = true;
+
+    } else if (state.showType === 'tv') {
+      if (lastTvPage.value === state.tvPage) {
+        resetPage();
+        if (state.tvPage !== 1) {
+          state.tvPage = 1;
+        }
+      }
+      const { data: tvShow } = await UseCallCustomApiResponse('/api/TMDBDiscoverTv', tvParams.value);
+      allShows.value.push(...[...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
+      lastTvPage.value = state.tvPage;
+      totalTvPages.value = tvShow.value?.totalPages;
+      canCallNewPage.value = true;
+    }
+
+    pending.value = false;
+  }, 500);
+});
+
+const isNotLoading = computed(() => {
+  switch (tmdbFiltersStore.showType) {
+    case 'all':
+      if (tmdbFiltersStore.moviePage === 1 && tmdbFiltersStore.tvPage === 1) {
+        return !pending.value;
+      } else {
+        return true;
+      }
+
+    case 'movies':
+      if (tmdbFiltersStore.moviePage === 1) {
+        return !pending.value;
+      } else {
+        return true;
+      }
+
+    case 'tv':
+      if (tmdbFiltersStore.tvPage === 1) {
+        return !pending.value;
+      } else {
+        return true;
+      }
+    default:
+      return false;
+      break;
+  }
+})
+
+const isLoading = computed(() => {
+  switch (true) {
+    case pending.value:
+      return true;
+    default:
+      return false;
+      break;
+  }
 })
 
 </script>
