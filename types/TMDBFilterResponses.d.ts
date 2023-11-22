@@ -96,7 +96,7 @@ declare global {
   interface Discover {
     page: number;
     results: Array<MovieShow> | Array<TvShow>;
-    total_pageS: number;
+    total_pages: number;
     total_results: number
   }
 }
