@@ -31,6 +31,7 @@
       <p
         v-if="props.showOverview != 'loading'"
         class="truncate-text text-sm pr-0  before:content-[''] before:bg-gradient-to-r before:from-transparent before:to-90% before:to-color_terciary before:block before:w-[100px] before:h-5 before:pointer-events-none"
+        :title="$props.showOverview"
       >
         {{ props.showOverview }}
       </p>
