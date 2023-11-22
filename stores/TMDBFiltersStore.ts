@@ -13,7 +13,7 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
 
   //release year/date
   const releaseYearLte = ref<number>(Number(new Date().getFullYear()));
-  const releaseYearGte = ref<number>(1904);
+  const releaseYearGte = ref<number>(1865);
   const releaseDateLte = computed<string>(() => {
     if (releaseYearLte.value === new Date().getFullYear()) {
       return `${releaseYearLte.value}-${new Date().getMonth() + 1}-${new Date().getDate().toString().padStart(2, '0')}`;
@@ -29,21 +29,25 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
 
   //genres
   const movieGenres = ref<Array<number>>([]);
-  const tvGenres = ref<Array<number>>([])
+  const tvGenres = ref<Array<number>>([]);
 
   //age group
-  const certifications = ref<Array<string>>([])
+  const certifications = ref<Array<string>>([]);
 
   //providers
-  const providers = ref<Array<number>>([])
+  const providers = ref<Array<number>>([]);
 
   //sort by
-  const sortBy = ref<SortBy>('primary_release_date.desc')
+  const sortBy = ref<SortBy>('primary_release_date.desc');
 
   //vote count
-  const minVoteCount = ref(100)
+  const minVoteCount = ref(10);
 
-  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy, minVoteCount };
+  //pages
+  const moviePage = ref(1);
+  const tvPage = ref(1);
+
+  return { watchRegion, showType, setShowType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy, minVoteCount, moviePage, tvPage};
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useTMDBFiltersStore, import.meta.hot));
