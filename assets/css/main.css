@@ -39,7 +39,7 @@
     }
 
     ::-webkit-scrollbar {
-        @apply w-1 h-1;
+        @apply w-[10px] h-[10px];
     }
 
     /* Cor de fundo da barra de rolagem */
