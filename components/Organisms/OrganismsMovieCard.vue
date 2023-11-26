@@ -12,6 +12,7 @@
       <div v-else-if="props.posterPath === 'not found'" class="w-full h-full bg-color_secondary/50 grid place-items-center px-5 text-center text-color_terciary">Poster not found</div>
       <img
         v-else
+        class="h-full"
         :src="imagePoster"
         :alt="`Poster of ${props.showTitle}`"
       >
@@ -37,7 +38,7 @@ const imagePoster = computed<string>(()=>{
   if (props.posterPath === 'not found') {
     return 'not found'
   } else {
-    return `https://image.tmdb.org/t/p/w200${props.posterPath}`
+    return `https://image.tmdb.org/t/p/w154${props.posterPath}`
   }
 })
 
