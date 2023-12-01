@@ -11,6 +11,13 @@ declare global {
     showType: ShowType;
   }
 
+  interface People {
+    name: string;
+    character: string;
+    picture: string;
+    popularity: number;
+  }
+
   type SortBy = 
   | "popularity.asc"
   | "popularity.desc"
