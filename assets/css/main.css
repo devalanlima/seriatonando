@@ -49,7 +49,7 @@
 
     /* Cor do thumb (a alça da barra de rolagem) */
     ::-webkit-scrollbar-thumb {
-    @apply bg-color_primary rounded-full;
+    @apply bg-color_primary;
     }
 
     /* Cor do thumb quando passar o mouse por cima */
