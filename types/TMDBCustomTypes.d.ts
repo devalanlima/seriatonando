@@ -13,7 +13,7 @@ declare global {
 
   interface People {
     name: string;
-    character: string;
+    role: string;
     picture: string;
     popularity: number;
   }
