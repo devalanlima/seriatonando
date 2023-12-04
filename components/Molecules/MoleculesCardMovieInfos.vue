@@ -1,12 +1,14 @@
 <template>
   <AtomsBaseCard class="flex relative overflow-hidden h-full flex-col justify-between gap-3">
     <div class="flex flex-col justify-start gap-1 h-fit">
-      <a
+      <NuxtLink
+        :to="props.showPath"
         v-if="props.showTitle != 'loading'"
         :title="props.showTitle"
-        href="#"
         class="relative text-xl whitespace-nowrap text-ellipsis overflow-hidden leading-none cursor-pointer w-fit max-w-[90%] hover:text-color_primary transition-colors duration-150 ease-in-out pb-1"
-      >{{ props.showTitle }}</a>
+      >
+        {{ props.showTitle }}
+      </NuxtLink>
       <div
         v-else
         class="max-w-[70%] h-[20px] bg-color_secondary animate-pulse rounded-md"
@@ -58,7 +60,8 @@ interface Props {
   showTitle: string;
   showOverview: string;
   showGenres: Array<number> | 'loading';
-  showType: ShowType
+  showType: ShowType;
+  showPath: object;
 }
 
 const props = defineProps<Props>();
