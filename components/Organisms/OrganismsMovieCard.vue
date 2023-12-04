@@ -7,7 +7,7 @@
       v-model="watchedMovie"
       :title="watchedMovie ? `Mark ${props.showTitle} as unseen` : `Mark ${props.showTitle} as seen`"
     />
-    <a href="#" class="min-w-[140px] block md:rounded-s-xl overflow-hidden">
+    <NuxtLink :to="showPath" class="min-w-[140px] block md:rounded-s-xl overflow-hidden">
       <div v-if="props.posterPath === 'loading'" class="w-full h-full block bg-color_secondary animate-pulse"></div>
       <div v-else-if="props.posterPath === 'not found'" class="w-full h-full bg-color_secondary/50 grid place-items-center px-5 text-center text-color_terciary">Poster not found</div>
       <img
@@ -16,7 +16,7 @@
         :src="imagePoster"
         :alt="`Poster of ${props.showTitle}`"
       >
-    </a>
+    </NuxtLink>        
     <AtomsWatchlistBtn
       class="absolute z-10 -top-1 right-5"
       v-model="watchlistMovie"
@@ -27,6 +27,7 @@
     :show-overview="props.showOverview"
     :show-genres="props.showGenres"
     :show-type="props.showType"
+    :show-path="showPath"
     class="rounded-e-none md:rounded-e-xl rounded-s-none w-full" />
   </div>
 </template>
@@ -43,6 +44,7 @@ const imagePoster = computed<string>(()=>{
 })
 
 interface Props {
+  showId?: number;
   showTitle: string;
   showOverview: string;
   posterPath?: string;
@@ -51,6 +53,16 @@ interface Props {
 }
 
 const props = defineProps<Props>()
+
+const localPath = useLocalePath()
+
+const showPath = computed(()=>{
+  if (props.showType !== 'all') {
+    return { path: localPath(`/${props.showType}`), query: { id: props.showId }}
+  } else {
+    return { path: localPath(`/`), query: { id: props.showId }}
+  }
+})
 </script>
 
 <style scoped></style>
