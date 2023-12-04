@@ -1,7 +1,7 @@
 <template>
-  <ol class="flex overflow-x-auto max-w-full gap-5">
+  <ol class="flex overflow-x-auto max-w-full gap-5 w-fit">
     <template v-for="(people, index) in props.people">
-      <li v-if="index <= loadMore">
+      <li v-if="index <= loadMore" class="w-[150px]">
         <AtomsPeopleCard
           :name="people.name"
           :role="people.role"
