@@ -12,18 +12,18 @@
       <AtomsCloseButton
         v-model="menuProvidersIsOpen"
         class="absolute right-5 top-5"
-        @action="menuProvidersIsOpen = false"
+        @action="reveal"
       />
       <div class="flex flex-col gap-3">
         <h3 class="text-2xl font-bold h3t-2 leading-none max-w-[90%] pl-3">CHOOSE YOUR STREAMING SERVICES</h3>
         <div class="pr-1">
-            <AtomsDivisionLine />
-            <AtomsMiniSearchbar
-              v-model="searchbarValue"
-              class="rounded-e-none rounded-s-none"
-              placeholder="Search..."
-            />
-            <AtomsDivisionLine />
+          <AtomsDivisionLine />
+          <AtomsMiniSearchbar
+            v-model="searchbarValue"
+            class="rounded-e-none rounded-s-none"
+            placeholder="Search..."
+          />
+          <AtomsDivisionLine />
         </div>
       </div>
       <div class="flex flex-col overflow-y-scroll gap-5">
@@ -41,14 +41,25 @@
           :searchbar-value="searchbarValue"
         />
       </div>
+      <button
+        class="bg-color_primary p-3 font-semibold hover:bg-color_primary/50"
+        @click="saveChanges()"
+      >SAVE</button>
+      <MoleculesConfirmDialog
+      label="Do you want to save the changes?"
+      :is-open="isRevealed"
+      @confirm="confirm"
+      @cancel="cancel"
+      />
     </AtomsBaseCard>
-    <AtomsBackgroundBlur />
+    <AtomsBackgroundBlur index="z-40" />
+
   </teleport>
 </template>
 
 <script setup lang="ts">
 
-const searchbarValue = ref<string>("")
+const searchbarValue = ref<string>("");
 
 interface Props {
   providers: Array<Provider>;
@@ -56,16 +67,21 @@ interface Props {
   isOpen: boolean;
 }
 
-const target = ref(null)
+const target = ref(null);
 
-onClickOutside(target, () => menuProvidersIsOpen.value = false)
+const { isRevealed, reveal, confirm, cancel, onReveal, onConfirm, onCancel } = useConfirmDialog()
+
+
+onClickOutside(target, () => {
+  reveal()
+})
 
 const menuProvidersIsOpen = computed({
   get() {
-    return props.isOpen
+    return props.isOpen;
   },
   set(value) {
-    emit('update:isOpen', value)
+    emit('update:isOpen', value);
   }
 })
 
@@ -73,15 +89,15 @@ useHead({
   bodyAttrs: {
     class: computed(() => {
       if (menuProvidersIsOpen.value) {
-        return 'overflow-hidden'
+        return 'overflow-hidden';
       } else {
-        return 'overflow-auto'
+        return 'overflow-auto';
       }
     }),
   },
 });
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   'update:modelValue': [value: Array<number>];
@@ -90,19 +106,29 @@ const emit = defineEmits<{
 
 const selectedProviders = computed({
   get() {
-    return props.modelValue
+    return props.modelValue;
   },
   set(value) {
-    emit('update:modelValue', value)
+    emit('update:modelValue', value);
   }
 })
 
+const saveChanges = () => {
+  emit('update:modelValue', selectedProviders.value);
+  menuProvidersIsOpen.value = false;
+}
 
-watch(() => selectedProviders.value, () => {
-  emit('update:modelValue', selectedProviders.value)
+onConfirm(() => {
+  saveChanges();
 })
 
-const { height } = useWindowSize()
+const tmdbFiltersStore = useTMDBFiltersStore();
+onCancel(() => {
+  selectedProviders.value = tmdbFiltersStore.providers
+  menuProvidersIsOpen.value = false;
+})
+
+const { height } = useWindowSize();
 
 const freeProviders = ref<Array<Pick<Provider, "provider_id">>>([
   { provider_id: 283 },
