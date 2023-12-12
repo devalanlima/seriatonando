@@ -28,7 +28,7 @@
             :src-image="`https://image.tmdb.org/t/p/w500${provider.logo_path}`"
             :title="provider.provider_name"
             :input-value="provider.provider_id"
-            v-model="tmdbFiltersStore.providers"
+            v-model="selectedProviders"
           />
         </li>
       </template>
@@ -37,14 +37,26 @@
   <LazyOrganismsProvidersMenu
     v-model:is-open="menuProvidersIsOpen"
     :providers="allProviders"
-    v-model="tmdbFiltersStore.providers"
+    v-model="selectedProviders"
   />
 </template>
 
 <script setup lang="ts">
 import AtomsIconsPlusBg from '../Atoms/Icons/AtomsIconsPlusBg.vue';
 
-const tmdbFiltersStore = useTMDBFiltersStore()
+const tmdbFiltersStore = useTMDBFiltersStore();
+
+const selectedProviders = ref([]);
+
+let timeoutApiCall: ReturnType<typeof setTimeout>;
+watch(() => selectedProviders.value, () => {
+  clearTimeout(timeoutApiCall);
+  timeoutApiCall = setTimeout(() => {
+    if (!menuProvidersIsOpen.value) {
+      tmdbFiltersStore.providers = selectedProviders.value
+    }
+  }, 500);
+})
 
 const el = ref<HTMLElement | null>(null)
 
@@ -3452,5 +3464,13 @@ const allProviders = ref<Array<Provider>>([])
 for (const provider of providers.results) {
   allProviders.value.push(provider)
 }
+
+onMounted(() => {
+  watch(() => menuProvidersIsOpen.value, (newValue) => {
+    if (!newValue) {
+      tmdbFiltersStore.providers = selectedProviders.value
+    }
+  })
+})
 
 </script>
