@@ -21,7 +21,7 @@ const tmdbFiltersStore = useTMDBFiltersStore()
 const selectedShowType = ref<ShowType>("all")
 
 watchEffect(()=>{
-  tmdbFiltersStore.setShowType(selectedShowType.value)
+  tmdbFiltersStore.showType = selectedShowType.value
 })
 
 const showTypes:Array<{
