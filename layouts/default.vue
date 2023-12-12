@@ -14,7 +14,12 @@
     </div>
     <OrganismsFilters
       class="px-5 md:px-0"
-      v-if="$route.fullPath.split('/')[$route.fullPath.split('/').length -1] !== 'trending'"
+      v-if="$route.fullPath.split('/')[$route.fullPath.split('/').length - 1] !== 'trending'"
     />
-  <slot></slot>
-</main></template>
+    <slot></slot>
+  </main>
+  <AtomsScrollToTopButton/>
+</template>
+
+<script setup lang="ts">
+</script>
