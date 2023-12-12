@@ -48,14 +48,18 @@
         </template>
       </div>
     </div>
-    <div class="flex justify-start">
-      <MoleculesMovieProviders />
+    <div class="flex justify-between items-center">
+      <AtomsShowTypeTag
+      :show-type="props.showType"
+      />
       <MoleculesAvaliationButtons />
     </div>
   </AtomsBaseCard>
 </template>
 
 <script setup lang="ts">
+import AtomsShowTypeTag from '../Atoms/AtomsShowTypeTag.vue';
+
 interface Props {
   showTitle: string;
   showOverview: string;
