@@ -36,7 +36,7 @@
       </template>
     </ul>
     <div
-      class="-bottom-14 w-full flex justify-center items-end absolute pointer-events-none border-2 h-screen"
+      class="-bottom-14 w-full flex justify-center items-end absolute pointer-events-none h-screen"
       ref="loadingSpin"
     >
       <AtomsLoadSpin
