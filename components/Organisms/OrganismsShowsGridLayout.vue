@@ -1,20 +1,25 @@
 <template>
   <article class="relative mb-10">
     <ul class="p-1 gap-5 grid grid-cols-[repeat(auto-fill,_minmax(375px,_1fr))] justify-items-center">
-      <template v-if="isNotLoading">
-        <template v-for="show in allShows">
-          <li class="w-full h-[210px]" v-if="tmdbFiltersStore.showType === show.showType || tmdbFiltersStore.showType === 'all'">
-            <OrganismsMovieCard
-              :show-title="show.title"
-              :show-genres="show.genres"
-              :show-overview="show.overview"
-              :poster-path="(show.posterPath != null ? show.posterPath : 'not found')"
-              :show-type="show.showType"
-            />
-          </li>
-        </template>
+      <template
+        v-for="show in allShows"
+        :key="show.id"
+      >
+        <li
+          class="w-full h-[210px]"
+          v-if="isLoading"
+        >
+          <OrganismsMovieCard
+            :show-title="show.title"
+            :show-genres="show.genres"
+            :show-overview="show.overview"
+            :poster-path="(show.posterPath != null ? show.posterPath : 'not found')"
+            :show-type="show.showType"
+            :show-id="show.id"
+          />
+        </li>
       </template>
-      <template v-if="isLoading">
+      <template v-if="!isLoading">
         <li
           class="w-full"
           v-for="load in 20"
@@ -31,11 +36,11 @@
       </template>
     </ul>
     <div
-      class="h-[800px] -bottom-14 w-full flex justify-center items-end absolute pointer-events-none"
+      class="-bottom-14 w-full flex justify-center items-end absolute pointer-events-none border-2 h-screen"
       ref="loadingSpin"
     >
       <AtomsLoadSpin
-        v-if="isSpinLoading"
+        v-if="showSpin"
         size="medium"
       />
     </div>
@@ -43,6 +48,13 @@
 </template>
 
 <script setup lang="ts">
+import useCallCustomApiResponse from '~/composables/UseCallCustomApiResponse';
+const tmdbFiltersStore = useTMDBFiltersStore();
+
+onUnmounted(() => {
+  tmdbFiltersStore.resetStore();
+})
+
 interface Props {
   urlApiMovie: string;
   urlApiTv: string;
@@ -50,114 +62,133 @@ interface Props {
   tvParams: object;
 }
 
-const props = defineProps<Props>()
-const tmdbFiltersStore = useTMDBFiltersStore();
-
-const { data: movieShow } = await UseCallCustomApiResponse(props.urlApiMovie, props.movieParams);
-const { data: tvShow } = await UseCallCustomApiResponse(props.urlApiTv, props.tvParams);
-
-const allShows = ref([...movieShow.value?.results || [], ...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity))
-
-const lastMoviePage = ref(tmdbFiltersStore.moviePage);
-const lastTvPage = ref(tmdbFiltersStore.tvPage);
-const totalMoviePages = ref(movieShow.value?.totalPages);
-const totalTvPages = ref(tvShow.value?.totalPages);
-const pending = ref(false);
-
-let timeoutApiCall: ReturnType<typeof setTimeout>;
-const canCallNewPage = ref(true);
-
-watch(() => tmdbFiltersStore.showType, (newValue, oldValue) => {
-  if (newValue !== oldValue) {
-    tmdbFiltersStore.moviePage = 1;
-    tmdbFiltersStore.tvPage = 1;
-    clearTimeout(timeoutApiCall);
-    allShows.value = [];
-  }
-})
-
-tmdbFiltersStore.$subscribe(async (mutation, state) => {
-  canCallNewPage.value = false;
-
-  clearTimeout(timeoutApiCall);
-  timeoutApiCall = setTimeout(async () => {
-    pending.value = true;
-    if (state.showType === 'all') {
-      if (lastMoviePage.value === state.moviePage || lastTvPage.value === state.tvPage && totalMoviePages.value !== 0 && totalTvPages.value !== 0 && state.moviePage !== totalMoviePages.value && state.tvPage !== totalTvPages.value) {
-        allShows.value = [];
-        if (state.moviePage !== 1 || state.tvPage !== 1) {
-          state.moviePage = 1;
-          state.tvPage = 1;
-        }
-      }
-      const { data: movieShow } = await UseCallCustomApiResponse(props.urlApiMovie, props.movieParams);
-      const { data: tvShow } = await UseCallCustomApiResponse(props.urlApiTv, props.tvParams);
-      if (totalTvPages.value === undefined || state.tvPage >= totalTvPages.value) {
-        allShows.value.push(...[...movieShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
-      } else if (totalMoviePages.value === undefined || state.moviePage !== totalMoviePages.value) {
-        allShows.value.push(...[...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
-      } else {
-        allShows.value.push(...[...movieShow.value?.results || [], ...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
-      }
-      lastMoviePage.value = state.moviePage;
-      lastTvPage.value = state.tvPage;
-      totalMoviePages.value = movieShow.value?.totalPages;
-      totalTvPages.value = tvShow.value?.totalPages;
-      canCallNewPage.value = true;
+const props = defineProps<Props>();
 
 
-    } else if (state.showType === 'movies') {
-      if (lastMoviePage.value === state.moviePage) {
-        allShows.value = [];
-        if (state.moviePage !== 1) {
-          state.moviePage = 1;
-        }
-      }
-      const { data: movieShow } = await UseCallCustomApiResponse(props.urlApiMovie, props.movieParams);
-      allShows.value.push(...[...movieShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
-      lastMoviePage.value = state.moviePage;
-      totalMoviePages.value = movieShow.value?.totalPages;
-      canCallNewPage.value = true;
 
-
-    } else if (state.showType === 'tv') {
-      if (lastTvPage.value === state.tvPage) {
-        allShows.value = [];
-        if (state.tvPage !== 1) {
-          state.tvPage = 1;
-        }
-      }
-      const { data: tvShow } = await UseCallCustomApiResponse(props.urlApiTv, props.tvParams);
-      allShows.value.push(...[...tvShow.value?.results || []].sort((a, b) => b.popularity - a.popularity));
-      lastTvPage.value = state.tvPage;
-      totalTvPages.value = tvShow.value?.totalPages;
-      canCallNewPage.value = true;
-    }
-
-
-    pending.value = false;
-  }, 200);
+const moviesPage = ref(1);
+const movieParams = computed(() => {
+  return {
+    "page": moviesPage.value,
+    ...props.movieParams,
+  };
 });
 
-const isNotLoading = computed(() => {
+const tvPage = ref(1);
+const tvParams = computed(() => {
+  return {
+    "page": tvPage.value,
+    ...props.tvParams,
+  };
+});
+
+const allShows = ref<Array<MoviesAndTv>>([]);
+
+const movies = ref<Array<MoviesAndTv>>([]);
+const totalMoviesPages = ref<number | undefined>(999);
+const moviePending = ref<boolean>(true);
+const searchMovies = async () => {
+  moviePending.value = true
+  const { data: dataMovie, pending: pendingMovie, error: errorMovie } = await useCallCustomApiResponse(props.urlApiMovie, movieParams);
+  moviePending.value = pendingMovie.value
+  totalMoviesPages.value = dataMovie.value?.totalPages
+  if (dataMovie.value?.results !== undefined && tmdbFiltersStore.showType === 'all' || tmdbFiltersStore.showType === 'movies') {
+    return dataMovie.value?.results
+  }
+};
+
+const tv = ref<Array<MoviesAndTv>>([]);
+const totalTvPages = ref<number | undefined>(999);
+const tvPending = ref<boolean>(true);
+const searchTv = async () => {
+  tvPending.value = true;
+  const { data: dataTv, pending: pendingTv, error: errorTv } = await useCallCustomApiResponse(props.urlApiTv, tvParams);
+  tvPending.value = pendingTv.value;
+  totalTvPages.value = dataTv.value?.totalPages;
+  if (dataTv.value?.results !== undefined && tmdbFiltersStore.showType === 'all' || tmdbFiltersStore.showType === 'tv') {
+    return dataTv.value?.results
+  }
+};
+
+const pushShows = async () => {
+  if (tmdbFiltersStore.showType === 'all') {
+    let arr = [... await searchMovies() || [], ... await searchTv() || []].sort((a, b) => b.popularity - a.popularity);
+    allShows.value.push(...arr);
+  } else if (tmdbFiltersStore.showType === 'movies') {
+    let arr = [... await searchMovies() || []].sort((a, b) => b.popularity - a.popularity);
+    allShows.value.push(...arr);
+  } else if (tmdbFiltersStore.showType === 'tv') {
+    let arr = [... await searchTv() || []].sort((a, b) => b.popularity - a.popularity);
+    allShows.value.push(...arr)
+  }
+};
+
+await pushShows();
+
+const { pause, resume, isActive } = useIntervalFn(async () => {
+  if (!moviePending.value && !tvPending.value && tmdbFiltersStore.showType === 'all') {
+    if (totalMoviesPages.value !== undefined && moviesPage.value < totalMoviesPages.value && totalMoviesPages.value > 1) {
+      moviesPage.value++;
+    }
+    if (totalTvPages.value !== undefined && tvPage.value < totalTvPages.value && totalTvPages.value > 1) {
+      tvPage.value++;
+    }
+    if (totalMoviesPages.value !== undefined && moviesPage.value < totalMoviesPages.value && totalMoviesPages.value > 1 || totalTvPages.value !== undefined && tvPage.value < totalTvPages.value && totalTvPages.value > 1) {
+      await pushShows();
+    }
+  } else if (!moviePending.value && tmdbFiltersStore.showType === 'movies') {
+    if (totalMoviesPages.value !== undefined && moviesPage.value < totalMoviesPages.value && totalMoviesPages.value > 1) {
+      moviesPage.value++;
+      await pushShows();
+    }
+  } else if (!tvPending.value && tmdbFiltersStore.showType === 'tv') {
+    if (totalTvPages.value !== undefined && tvPage.value < totalTvPages.value && totalTvPages.value > 1) {
+      tvPage.value++;
+      await pushShows();
+    }
+  }
+}, 300);
+pause();
+
+let timeoutApiCall: ReturnType<typeof setTimeout>;
+tmdbFiltersStore.$subscribe(async (mutation, state) => {
+  clearTimeout(timeoutApiCall);
+  timeoutApiCall = setTimeout(async () => {
+    resetPage();
+  }, 300);
+})
+
+const resetPage = async () => {
+  allShows.value = [];
+  movies.value = [];
+  tv.value = [];
+  moviesPage.value = 1;
+  tvPage.value = 1;
+  totalTvPages.value = 1;
+  totalMoviesPages.value = 1;
+  await pushShows();
+};
+
+
+const isLoading = computed(() => {
   switch (tmdbFiltersStore.showType) {
     case 'all':
-      if (tmdbFiltersStore.moviePage === 1 && tmdbFiltersStore.tvPage === 1) {
-        return !pending.value;
+      if (moviesPage.value === 1 && tvPage.value === 1) {
+        return !tvPending.value && !moviePending.value;
       } else {
         return true;
       }
 
     case 'movies':
-      if (tmdbFiltersStore.moviePage === 1) {
-        return !pending.value;
+      if (moviesPage.value === 1) {
+        return !moviePending.value;
       } else {
         return true;
       }
 
     case 'tv':
-      if (tmdbFiltersStore.tvPage === 1) {
-        return !pending.value;
+      if (tvPage.value === 1) {
+        return !tvPending.value;
       } else {
         return true;
       }
@@ -165,77 +196,42 @@ const isNotLoading = computed(() => {
       return false;
       break;
   }
-})
-
-const isLoading = computed(() => {
-  switch (true) {
-    case pending.value:
-      return true;
-    default:
-      return false;
-      break;
-  }
-})
+});
 
 const loadingSpin = ref<HTMLElement | null>(null)
 const targetIsVisible = useElementVisibility(loadingSpin)
-
-watch(() => targetIsVisible.value, (newValue) => {
-  const intervalId = setInterval(() => {
-
-    if (canCallNewPage.value && newValue) {
-      clearTimeout(timeoutApiCall);
-      if (tmdbFiltersStore.showType === 'all') {
-        if (totalMoviePages.value !== undefined ? tmdbFiltersStore.moviePage < totalMoviePages.value : false) {
-          tmdbFiltersStore.moviePage++;
-        }
-        if (totalTvPages.value !== undefined ? tmdbFiltersStore.tvPage < totalTvPages.value : false) {
-          tmdbFiltersStore.tvPage++;
-        }
-        if (tmdbFiltersStore.moviePage === totalMoviePages.value && tmdbFiltersStore.tvPage === totalTvPages.value || 0 === totalMoviePages.value && 0 === totalTvPages.value) {
-          canCallNewPage.value = false
-        }
-      } else if (tmdbFiltersStore.showType === 'movies') {
-        if (totalMoviePages.value !== undefined ? tmdbFiltersStore.moviePage < totalMoviePages.value : false) {
-          tmdbFiltersStore.moviePage++;
-        }
-        if (tmdbFiltersStore.moviePage === totalMoviePages.value || totalMoviePages.value === 0) {
-          canCallNewPage.value = false
-        }
-      } else if (tmdbFiltersStore.showType === 'tv') {
-        if (totalTvPages.value !== undefined ? tmdbFiltersStore.tvPage < totalTvPages.value : false) {
-          tmdbFiltersStore.tvPage++;
-        }
-        if (tmdbFiltersStore.tvPage === totalTvPages.value || totalTvPages.value === 0) {
-          canCallNewPage.value = false
-        }
+const showSpin = computed(() => {
+  if (totalMoviesPages.value !== undefined && totalTvPages.value !== undefined) {
+    if (tmdbFiltersStore.showType === 'all') {
+      if (moviesPage.value >= totalMoviesPages.value && tvPage.value >= totalTvPages.value) {
+        return false
+      } else {
+        return true
+      }
+    } else if (tmdbFiltersStore.showType === 'movies') {
+      if (moviesPage.value >= totalMoviesPages.value) {
+        return false
+      } else {
+        return true
+      }
+    } else if (tmdbFiltersStore.showType === 'tv') {
+      if (tvPage.value >= totalTvPages.value) {
+        return false
+      } else {
+        return true
       }
     }
-    if (!targetIsVisible.value) {
-      clearInterval(intervalId);
-    }
-  }, 100);
-})
-
-const isSpinLoading = computed(() => {
-  if (tmdbFiltersStore.showType === 'all') {
-    if (totalMoviePages.value !== undefined && tmdbFiltersStore.moviePage < totalMoviePages.value || totalTvPages.value !== undefined && tmdbFiltersStore.tvPage < totalTvPages.value) {
-      return true
-    } else {
-      return false
-    }
-  } else if (tmdbFiltersStore.showType === 'movies') {
-    if (totalMoviePages.value !== undefined && tmdbFiltersStore.moviePage < totalMoviePages.value) {
-      return true
-    } else {
-      return false
-    }
-  } else if (tmdbFiltersStore.showType === 'tv') {
-    if (totalTvPages.value !== undefined && tmdbFiltersStore.tvPage < totalTvPages.value) {
-      return true
-    } else {
-      return false
-    }
+  } else {
+    return true
   }
-})
+});
+
+watch(() => targetIsVisible.value, (newValue) => {
+  if (newValue) {
+    resume();
+  } else {
+    pause();
+  }
+});
+
 </script>
