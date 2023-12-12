@@ -15,7 +15,6 @@ const movieParams = computed(() => {
   return {
     "language": projectStore.language,
     "certification_country": tmdbFiltersStore.certifications.length > 0 ? projectStore.region : undefined,
-    "page": tmdbFiltersStore.moviePage,
     "primary_release_date.gte": tmdbFiltersStore.releaseDateGte,
     "primary_release_date.lte": tmdbFiltersStore.releaseDateLte,
     "sort_by": tmdbFiltersStore.sortBy,
@@ -32,7 +31,6 @@ const movieParams = computed(() => {
 const tvParams = computed(() => {
   return {
     "language": projectStore.language,
-    "page": tmdbFiltersStore.tvPage,
     "air_date.gte": tmdbFiltersStore.releaseDateGte,
     "air_date.lte": tmdbFiltersStore.releaseDateLte,
     "sort_by": tmdbFiltersStore.sortBy,
