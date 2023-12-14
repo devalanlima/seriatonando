@@ -11,6 +11,7 @@ export default async function useCallCustomApiResponse(url: string, params: obje
         posterPath: item.poster_path,
         popularity: item.popularity,
         showType: 'title' in item? 'movies' : 'name' in item? 'tv': 'all',
+        releaseDate: 'release_date' in item? item.release_date : item.first_air_date
       }));
       const totalPages  = item.total_pages;
       const totalResults = item.total_results;
