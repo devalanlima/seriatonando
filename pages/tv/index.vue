@@ -1,5 +1,5 @@
 <template>
-	<article class="grid grid-cols-[repeat(auto-fit,_minmax(400px,_1fr))] border-inherit">
+	<article class="grid grid-cols-[repeat(auto-fit,_minmax(375px,_1fr))] border-inherit">
 		<div class="flex flex-col h-fit divide-y border-color_primary lg:border-r-[1px]">
 			<img
 				class="h-full max-h-[500px] aspect-video w-full object-cover object-top xl:hidden"
