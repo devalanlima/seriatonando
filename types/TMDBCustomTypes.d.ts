@@ -9,6 +9,7 @@ declare global {
     posterPath: string;
     popularity: number;
     showType: ShowType;
+    releaseDate: string;
   }
 
   interface People {
