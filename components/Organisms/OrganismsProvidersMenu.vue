@@ -41,10 +41,11 @@
           :searchbar-value="searchbarValue"
         />
       </div>
-      <button
-        class="bg-color_primary p-3 font-semibold hover:bg-color_primary/50"
-        @click="saveChanges()"
-      >SAVE</button>
+      <AtomsDialogBtn
+      class="w-[90%] mx-auto"
+      label="SAVE"
+      @action="saveChanges()"
+      />
       <MoleculesConfirmDialog
       label="Do you want to save the changes?"
       :is-open="isRevealed"
