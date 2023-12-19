@@ -32,7 +32,16 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
   const certifications = ref<Array<string>>([]);
 
   //providers
+  const cookieProviders = useCookie<Array<number>>('selected_providers');
   const providers = ref<Array<number>>([]);
+  if (cookieProviders.value === undefined) {
+    providers.value = [];
+  } else {
+    providers.value = cookieProviders.value;
+  }
+  watch(() => providers.value, (newValue) => {
+    cookieProviders.value = newValue
+  })
 
   //sort by
   const sortBy = ref<SortBy>('primary_release_date.desc');
@@ -54,14 +63,14 @@ export const useTMDBFiltersStore = defineStore("TMDBFiltersStore", () => {
     //age group
     certifications.value = [];
     //providers
-    providers.value = [];
+    providers.value = cookieProviders.value;
     //sort by
     sortBy.value = 'primary_release_date.desc';
     //vote count
     minVoteCount.value = 10;
   }
 
-  return { watchRegion, showType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy, minVoteCount, resetStore};
+  return { watchRegion, showType, releaseDateLte, releaseDateGte, releaseYearGte, releaseYearLte, voteAverageGte, voteAverageLte, movieGenres, tvGenres, certifications, providers, sortBy, minVoteCount, resetStore };
 })
 if (import.meta.hot) {
   import.meta.hot.accept(acceptHMRUpdate(useTMDBFiltersStore, import.meta.hot));
