@@ -46,7 +46,7 @@ import AtomsIconsPlusBg from '../Atoms/Icons/AtomsIconsPlusBg.vue';
 
 const tmdbFiltersStore = useTMDBFiltersStore();
 
-const selectedProviders = ref([]);
+const selectedProviders = ref(tmdbFiltersStore.providers);
 
 let timeoutApiCall: ReturnType<typeof setTimeout>;
 watch(() => selectedProviders.value, () => {
