@@ -1,5 +1,6 @@
 <template>
   <NuxtLayout>
+    <MoleculesCookieAlert/>
     <NuxtPage />
   </NuxtLayout>
 </template>
