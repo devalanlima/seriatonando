@@ -6,14 +6,16 @@
     >
       <p class="text-center">{{ props.label }}</p>
       <div class="flex justify-around gap-5">
-        <button
-          class="bg-color_primary w-full p-2 rounded-xl hover:bg-color_primary/50"
-          @click="emit('confirm')"
-        >Yes</button>
-        <button
-          class="bg-color_primary w-full p-2 rounded-xl hover:bg-color_primary/50"
-          @click="emit('cancel')"
-        >No</button>
+        <AtomsDialogBtn
+        class="w-full"
+        label="Yes"
+        @click="emit('confirm')"
+        />
+        <AtomsDialogBtn
+        class="w-full"
+        label="No"
+        @click="emit('cancel')"
+        />
       </div>
       <AtomsBackgroundBlur index="z-50" />
     </AtomsBaseCard>
