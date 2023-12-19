@@ -10,11 +10,11 @@
     <div class="flex px-5 md:px-0 gap-5 w-full items-center">
       <MoleculesShowTypeFilter />
       <OrganismsProvidersSelection
-        v-if="$route.fullPath.split('/')[$route.fullPath.split('/').length - 1] !== 'trending'" />
+        v-if="$route.name?.toString().split('_')[0] === 'index'" />
     </div>
     <OrganismsFilters
       class="px-5 md:px-0"
-      v-if="$route.fullPath.split('/')[$route.fullPath.split('/').length - 1] !== 'trending'"
+      v-if="$route.name?.toString().split('_')[0] === 'index'"
     />
     <slot></slot>
   </main>
