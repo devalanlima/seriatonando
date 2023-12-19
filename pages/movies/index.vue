@@ -7,7 +7,7 @@
 				:alt="showTitle"
 			>
 			<h1 class="font-semibold text-3xl leading-none m-0 z-10 p-5 relative bg-color_primary border-inherit">
-				{{ showTitle }} ({{ data?.release_date !== undefined ? data?.release_date.split("-")[0] : ""}})
+				{{ showTitle }} ({{ data?.release_date !== undefined && data.release_date !== null ? data?.release_date.split("-")[0] : ""}})
 			</h1>
 			<div class="border-inherit grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))]">
 				<img

@@ -118,8 +118,18 @@ const showTitle = data.value?.name ? data.value.name : data.value?.original_name
 
 const showAirDate = computed(()=>{
 	if (data.value?.first_air_date !== undefined && data.value.last_air_date !== undefined) {
-		let firstYear = data.value.first_air_date.split("-")[0]
-		let lastYear = data.value.last_air_date.split("-")[0]
+		let firstYear
+		let lastYear
+		if (data.value.first_air_date !== null) {
+			firstYear = data.value.first_air_date.split("-")[0]
+		} else {
+			firstYear = "N/A"
+		}
+		if (data.value.last_air_date !== null) {
+			lastYear = data.value.last_air_date.split("-")[0]
+		} else {
+			lastYear = firstYear
+		}
 		if (firstYear !== lastYear) {
 			return `${firstYear} / ${lastYear}`
 		} else {
