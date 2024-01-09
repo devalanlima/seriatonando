@@ -1,18 +1,21 @@
 <template>
-	<article class="grid grid-cols-[repeat(auto-fit,_minmax(375px,_1fr))] border-inherit">
+	<article
+		class="grid grid-cols-[repeat(auto-fit,_minmax(375px,_1fr))] border-inherit"
+		v-if="!pending"
+	>
 		<div class="flex flex-col h-fit divide-y border-color_primary lg:border-r-[1px]">
 			<img
 				class="h-full max-h-[500px] aspect-video w-full object-cover object-top xl:hidden"
-				:src="`https://image.tmdb.org/t/p/original${data?.backdrop_path}`"
+				:src="`https://image.tmdb.org/t/p/w780${data?.backdrop_path}`"
 				:alt="showTitle"
 			>
 			<h1 class="font-semibold text-3xl leading-none m-0 z-10 p-5 relative bg-color_primary border-inherit">
-				{{ showTitle }} ({{ data?.release_date !== undefined && data.release_date !== null ? data?.release_date.split("-")[0] : ""}})
+				{{ showTitle }} {{ dataRelease() }}
 			</h1>
 			<div class="border-inherit grid grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))]">
 				<img
 					class="object-contain hidden xl:block"
-					:src="`https://image.tmdb.org/t/p/original${data?.poster_path}`"
+					:src="`https://image.tmdb.org/t/p/w500${data?.poster_path}`"
 					:alt="`Poster ${showTitle}`"
 				>
 				<div class="outline outline-1 outline-color_primary">
@@ -87,6 +90,12 @@
 			/>
 		</div>
 	</article>
+	<div
+		v-else
+		class="h-screen grid place-items-center"
+	>
+		<AtomsLoadSpin :size="'large'" />
+	</div>
 </template>
   
 <script setup lang="ts">
@@ -105,11 +114,38 @@ const movieParams = computed(() => {
 	};
 });
 
-const { data } = await useFetch('/api/TMDBMovieId', {
+const { data, pending } = await useFetch('/api/TMDBMovieId', {
 	params: movieParams
 })
 
-const showTitle = data.value?.title ? data.value.title : data.value?.original_title ? data.value?.original_title : 'Show title not found [404]'
+const showTitle = computed(() => {
+	return data.value?.title ? data.value.title : data.value?.original_title ? data.value?.original_title : 'Show title not found [404]'
+})
+
+const months: { [key: number]: string } = {
+	1: "Jan",
+	2: "Feb",
+	3: "Mar",
+	4: "Apr",
+	5: "May",
+	6: "Jun",
+	7: "Jul",
+	8: "Aug",
+	9: "Sep",
+	10: "Oct",
+	11: "Nov",
+	12: "Dec"
+}
+
+const dataRelease = () => {
+	if (data.value?.release_date !== undefined && data.value.release_date !== null) {
+		let formatedDate = data.value.release_date.split('-')
+		let month = months[Number(formatedDate[1])]
+		let day = formatedDate[2]
+		let year = formatedDate[0]
+		return `| ${day} ${month} ${year}`
+	}
+}
 
 
 const reduceVoteCount = (toReduce: number) => {
@@ -184,12 +220,13 @@ const runtime = computed(() => {
 	}
 })
 
-const genres = ref<Array<string>>([])
-data.value?.genres.forEach(genre => {
-	genres.value.push(genre.name)
-});
-
-
+const genres = computed(() => {
+	let arrGenres: Array<string> = [];
+	data.value?.genres.forEach(genre => {
+		arrGenres.push(genre.name)
+	});
+	return arrGenres
+})
 
 const certification = () => {
 	let regionExist = false
@@ -233,53 +270,129 @@ const certification = () => {
 	return certification
 }
 
-const cast = ref<Array<People>>([]);
-data.value?.credits.cast.forEach(actor => {
-	cast.value.push({
-		name: actor.name,
-		role: actor.character,
-		picture: actor.profile_path,
-		popularity: actor.popularity
-	})
-});
-
-const crew = ref<Array<People>>([]);
-data.value?.credits.crew.forEach(people => {
-	crew.value.push({
-		name: people.name,
-		role: people.job,
-		picture: people.profile_path,
-		popularity: people.popularity
-	})
-});
-
-const videoUrls = ref<Array<{
-	name: string;
-	key: string;
-	id: string;
-}>>([]);
-
-onMounted(() => {
-	let countVideos = 0
-	data.value?.videos.results.forEach(video => {
-		if (video.type === "Trailer" && countVideos <= 3) {
-			videoUrls.value.push({
-				name: video.name,
-				key: video.key,
-				id: video.id
-			})
-			countVideos++
-		}
-
-		if (video.type === "Clip" && countVideos <= 3) {
-			videoUrls.value.push({
-				name: video.name,
-				key: video.key,
-				id: video.id
-			})
-			countVideos++
-		}
+const cast = computed(() => {
+	let arrCast: Array<People> = [];
+	data.value?.credits.cast.forEach(actor => {
+		arrCast.push({
+			name: actor.name,
+			role: actor.character,
+			picture: actor.profile_path,
+			popularity: actor.popularity
+		})
 	});
+	return arrCast
+})
+
+const crew = computed(() => {
+	let arrCrew: Array<People> = [];
+	data.value?.credits.crew.forEach(people => {
+		arrCrew.push({
+			name: people.name,
+			role: people.job,
+			picture: people.profile_path,
+			popularity: people.popularity
+		})
+	});
+	return arrCrew
+})
+
+const videoUrls = computed(() => {
+	let arrVideoUrls: Array<{
+		name: string;
+		key: string;
+		id: string;
+	}> = [];
+	let countTrailers = 0;
+	let countClips = 0;
+	let countTeasers = 0;
+	if (data.value?.videos.results !== undefined) {
+		for (const video of data.value?.videos.results) {
+			if (video.iso_3166_1 === projectStore.region) {
+				if (video.type === "Trailer") {
+					countTrailers++;
+					arrVideoUrls.push({
+						name: video.name,
+						key: video.key,
+						id: video.id
+					});
+				} else if (video.type === "Clip") {
+					countClips++;
+					arrVideoUrls.push({
+						name: video.name,
+						key: video.key,
+						id: video.id
+					})
+				} else if (video.type === "Teaser") {
+					countTeasers++;
+					arrVideoUrls.push({
+						name: video.name,
+						key: video.key,
+						id: video.id
+					})
+				}
+			}
+		}
+
+		if (countTrailers < 2 || countClips < 1 || countTeasers < 1) {
+			for (const video of data.value?.videos.results) {
+				if (video.iso_3166_1 === "US") {
+					if (video.type === "Trailer" && countTrailers < 2) {
+						countTrailers++;
+						arrVideoUrls.push({
+							name: video.name,
+							key: video.key,
+							id: video.id
+						})
+					} else if (video.type === "Clip" && countClips < 1) {
+						countClips++;
+						arrVideoUrls.push({
+							name: video.name,
+							key: video.key,
+							id: video.id
+						})
+					} else if (video.type === "Teaser" && countTeasers < 1) {
+						countTeasers++;
+						arrVideoUrls.push({
+							name: video.name,
+							key: video.key,
+							id: video.id
+						})
+					}
+				}
+			}
+		}
+
+		if ((countTrailers + countClips + countTeasers) < 4) {
+			for (const video of data.value?.videos.results) {
+				if (video.iso_3166_1 === "US") {
+					if (video.type === "Trailer" && (countTrailers + countClips + countTeasers) < 4 && !arrVideoUrls.some(obj => obj.id === video.id)) {
+						countTrailers++;
+						arrVideoUrls.push({
+							name: video.name,
+							key: video.key,
+							id: video.id
+						})
+					} else if (video.type === "Clip" && (countTrailers + countClips + countTeasers) < 4 && !arrVideoUrls.some(obj => obj.id === video.id)) {
+						countClips++;
+						arrVideoUrls.push({
+							name: video.name,
+							key: video.key,
+							id: video.id
+						})
+					} else if (video.type === "Teaser" && (countTrailers + countClips + countTeasers) < 4 && !arrVideoUrls.some(obj => obj.id === video.id)) {
+						countTeasers++;
+						arrVideoUrls.push({
+							name: video.name,
+							key: video.key,
+							id: video.id
+						})
+					}
+				};
+			}
+		}
+	}
+
+	return arrVideoUrls
 })
 
 const ads = ref<Array<WatchProvidersRegionContent> | undefined>()
@@ -287,19 +400,21 @@ const flatrate = ref<Array<WatchProvidersRegionContent> | undefined>()
 const buy = ref<Array<WatchProvidersRegionContent> | undefined>()
 const rent = ref<Array<WatchProvidersRegionContent> | undefined>()
 
-const providerResults: WatchProvidersResults | undefined = data.value?.['watch/providers'].results
-
-for (const key in providerResults) {
-	if (Object.prototype.hasOwnProperty.call(providerResults, key)) {
-		const element = providerResults[key];
-		if (key === projectStore.region) {
-			ads.value = element?.ads
-			flatrate.value = element?.flatrate
-			buy.value = element?.buy
-			rent.value = element?.rent
+watch(() => data.value, () => {
+	console.log('change');
+	const providerResults: WatchProvidersResults | undefined = data.value?.['watch/providers'].results
+	for (const key in providerResults) {
+		if (Object.prototype.hasOwnProperty.call(providerResults, key)) {
+			const element = providerResults[key];
+			if (key === projectStore.region) {
+				ads.value = element?.ads
+				flatrate.value = element?.flatrate
+				buy.value = element?.buy
+				rent.value = element?.rent
+			}
 		}
 	}
-}
+})
 
 const justwatchAdText = computed(() => {
 	let all: Array<string> = [];
@@ -322,13 +437,10 @@ const justwatchAdText = computed(() => {
 
 	function customJoin(arr: Array<string>): string {
 		if (arr.length === 1) {
-			// Se houver apenas um elemento, retorne esse elemento diretamente
 			return arr[0];
 		} else if (arr.length === 2) {
-			// Se houver apenas dois elementos, use "or" para juntar
 			return arr.join(' or ');
 		} else {
-			// Caso contrário, use o separador padrão (vírgula)
 			let final: string = ""
 			arr.forEach((element, index) => {
 				if (index === (arr.length - 2)) {
@@ -343,9 +455,9 @@ const justwatchAdText = computed(() => {
 		}
 	}
 	if (all.length === 0) {
-		return ` ${showTitle}, is not avaiable to watch in ${projectStore.region}. JustWatch helps you discover where you can legally watch your movies and TV shows online. For more information, visit `
+		return ` ${showTitle.value}, is not avaiable to watch in ${projectStore.region}. JustWatch helps you discover where you can legally watch your movies and TV shows online. For more information, visit `
 	} else {
-		return ` ${showTitle}, is currently available to watch with ${customJoin(all)} in ${projectStore.region}. JustWatch helps you discover where you can legally watch your movies and TV shows online. For more information, visit `
+		return ` ${showTitle.value}, is currently available to watch with ${customJoin(all)} in ${projectStore.region}. JustWatch helps you discover where you can legally watch your movies and TV shows online. For more information, visit `
 	}
 })
 </script>  
