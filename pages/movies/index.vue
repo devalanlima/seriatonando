@@ -193,23 +193,23 @@ const reduceRuntime = (toReduce: number) => {
 	let num = toReduce
 	let reduced = ''
 	let count = 0
-	if (num > 60) {
-		do {
-			num = num / 60
+	if (num >= 60) {
+		while (num >= 60) {
+			num = num - 60
 			count++
-		} while (num > 60);
+		}
 	}
-	switch (true) {
-		case count === 1:
-			let hour = Number(num.toFixed(0))
-			let min = Math.ceil(((Number((num.toFixed(2).toString().split('.')[1])) * 60) / 100))
+	let hour = ''
+	if (count !== 0) {
+		hour = `${count}h`
+	}
 
-			reduced = `${hour}h ${min}m`
-			break;
-		default:
-			reduced = num.toString() + 'm';
-			break;
+	let min = ''
+	if (num !== 0) {
+		min = `${num}min`
 	}
+
+	reduced = `${hour} ${min}`
 	return reduced
 }
 const runtime = computed(() => {
@@ -308,21 +308,21 @@ const videoUrls = computed(() => {
 	if (data.value?.videos.results !== undefined) {
 		for (const video of data.value?.videos.results) {
 			if (video.iso_3166_1 === projectStore.region) {
-				if (video.type === "Trailer") {
+				if (video.type === "Trailer" && countTrailers < 2) {
 					countTrailers++;
 					arrVideoUrls.push({
 						name: video.name,
 						key: video.key,
 						id: video.id
 					});
-				} else if (video.type === "Clip") {
+				} else if (video.type === "Clip" && countClips < 1) {
 					countClips++;
 					arrVideoUrls.push({
 						name: video.name,
 						key: video.key,
 						id: video.id
 					})
-				} else if (video.type === "Teaser") {
+				} else if (video.type === "Teaser" && countTeasers < 1) {
 					countTeasers++;
 					arrVideoUrls.push({
 						name: video.name,
@@ -400,8 +400,7 @@ const flatrate = ref<Array<WatchProvidersRegionContent> | undefined>()
 const buy = ref<Array<WatchProvidersRegionContent> | undefined>()
 const rent = ref<Array<WatchProvidersRegionContent> | undefined>()
 
-watch(() => data.value, () => {
-	console.log('change');
+watchEffect(() => {
 	const providerResults: WatchProvidersResults | undefined = data.value?.['watch/providers'].results
 	for (const key in providerResults) {
 		if (Object.prototype.hasOwnProperty.call(providerResults, key)) {
