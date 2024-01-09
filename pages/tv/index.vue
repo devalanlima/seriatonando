@@ -285,21 +285,21 @@ const videoUrls = computed(() => {
 	if (data.value?.videos.results !== undefined) {
 		for (const video of data.value?.videos.results) {
 			if (video.iso_3166_1 === projectStore.region) {
-				if (video.type === "Trailer") {
+				if (video.type === "Trailer" && countTrailers < 2) {
 					countTrailers++;
 					arrVideoUrls.push({
 						name: video.name,
 						key: video.key,
 						id: video.id
 					});
-				} else if (video.type === "Clip") {
+				} else if (video.type === "Clip" && countClips < 1) {
 					countClips++;
 					arrVideoUrls.push({
 						name: video.name,
 						key: video.key,
 						id: video.id
 					})
-				} else if (video.type === "Teaser") {
+				} else if (video.type === "Teaser" && countTeasers < 1) {
 					countTeasers++;
 					arrVideoUrls.push({
 						name: video.name,
@@ -378,7 +378,7 @@ const flatrate = ref<Array<WatchProvidersRegionContent> | undefined>()
 const buy = ref<Array<WatchProvidersRegionContent> | undefined>()
 const rent = ref<Array<WatchProvidersRegionContent> | undefined>()
 
-watch(() => data.value, () => {
+watchEffect(() => {
 	const providerResults: WatchProvidersResults | undefined = data.value?.['watch/providers'].results
 	for (const key in providerResults) {
 		if (Object.prototype.hasOwnProperty.call(providerResults, key)) {
