@@ -39,7 +39,7 @@ const imagePoster = computed<string>(()=>{
   if (props.posterPath === 'not found') {
     return 'not found'
   } else {
-    return `https://image.tmdb.org/t/p/w154${props.posterPath}`
+    return `https://image.tmdb.org/t/p/w185${props.posterPath}`
   }
 })
 
